@@ -105,7 +105,10 @@ def SAXScalc(qCholpal, qSampleItem):
         print('lamellar')
         
     else:
+        a = ['not determinable', '-']
         print('a not determinable')
+        data.append(a)
+        
         
     return data
 
@@ -170,11 +173,11 @@ def LatticeRatio(d, d_0):
 #### Import needed input data ####
 ##################################
 
-path = 'C:/Users/Selly/Documents/Uni/4_Semester/Masterarbeit/Python' 
+path = 'C:/Users/Selly/Documents/Uni/4_Semester/HiWi/INF_Project/Python' 
 files = os.listdir(path)
 
 #### Cholesteryl Palmitate ####
-a = pd.read_table('CholPal_210713.pdh', delimiter = '   ', usecols=[0,1], names = ['q', 'I'], header=5, skipfooter=496, engine = 'python')
+a = pd.read_table('CholPal_210713[7]1.pdh', delimiter = '   ', usecols=[0,1], names = ['q', 'I'], header=5, skipfooter=496, engine = 'python')
 q = a['q']
 I = a['I']
 
