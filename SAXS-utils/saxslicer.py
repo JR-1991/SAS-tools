@@ -4,6 +4,7 @@ from lxml import etree
 
 class SAXSlicer:
     """Separate data block and XML metadata footer of a .pdh SAXS output file."""
+    
     def __init__(self, inputFile: str = None):
         if inputFile is None: inputFile = "Jupyter/datasets/SI06_210623[7].pdh"
         self.inputFile = inputFile
@@ -14,7 +15,7 @@ class SAXSlicer:
         return anyWhitespace
     
     def extract_data(self) -> pd.DataFrame:
-        """Extract data block as `pandas.DataFrame`-."""
+        """Extract data block as `pandas.DataFrame`."""
         dataFrame = pd.read_table(self.inputFile, delimiter = "   ", usecols=[0,1], names = ["scatteringVector", "countsPerArea"], header=5, skipfooter=496, engine = "python")
         return dataFrame
 
