@@ -9,7 +9,7 @@ class SAXSlicer:
         self.inputFile = inputFile
 
     def _line_is_xml(self, lineInFile):
-        """Match n whitespaces, followed by an XML opening tag (<)."""
+        """Match n whitespaces, followed by an XML opening tag `<`."""
         anyWhitespace = re.compile("\s*<").match(lineInFile)
         return anyWhitespace
     
