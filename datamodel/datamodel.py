@@ -1,12 +1,12 @@
 """ Datamodel for SAXS with export functionalities to JSON and XML. """
 
 __all__ = []
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 __author__ = "Torsten Giess"
 
 from typing import List, Union, Optional
 
-import pandas as pd
+# import pandas as pd
 from pydantic.dataclasses import dataclass
 
 from utilities import SchemaBase, attribute, element
@@ -43,7 +43,7 @@ class Value(SchemaBase):
     tol: Optional[Union[int, float]] = attribute(name="tol")
     min_: Optional[Union[int, float]] = attribute(name="min")
     max_: Optional[Union[int, float]] = attribute(name="max")
-    value: str = element(name="value")
+    value: str
 
     # @classmethod
     # def column_value(cls, text, key)
