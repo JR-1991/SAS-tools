@@ -23,7 +23,6 @@ from utilities import SchemaBase, attribute, element
 class Value(SchemaBase):
     """ Values are the endpoints of the metadata tree. """
     
-    text: str
     key: Optional[str] = attribute(name="key")
     name: Optional[str] = attribute(name="name")
     value: Optional[str] = attribute(name="value")
@@ -44,6 +43,7 @@ class Value(SchemaBase):
     tol: Optional[Union[int, float]] = attribute(name="tol")
     min_: Optional[Union[int, float]] = attribute(name="min")
     max_: Optional[Union[int, float]] = attribute(name="max")
+    value: str = element(name="value")
 
     # @classmethod
     # def column_value(cls, text, key)
