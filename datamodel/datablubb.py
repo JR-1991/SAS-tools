@@ -45,10 +45,6 @@ class Value(SchemaBase):
     max_: Optional[Union[int, float]] = attribute(name="max")
     value: str
 
-    # @classmethod
-    # def column_value(cls, text, key)
-    #     return cls(text, key)
-
 
 @dataclass
 class List_(SchemaBase):
