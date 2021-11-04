@@ -34,5 +34,6 @@ group_1.list_.append(
 fileinfo.setup.groups.append(group_1)
 
 
-print(fileinfo)
-print(fileinfo.toXML())
+xml_string = fileinfo.toXML()
+
+print(Fileinfo.fromXMLString(xml_string))
