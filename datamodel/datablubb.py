@@ -2,14 +2,14 @@
 
 
 __all__ = []
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __author__ = "Torsten Giess"
 
 from typing import List, Union, Optional
 
 # import pandas as pd
 from dataclasses import dataclass
-from datamodel.softdata import SchemaBase, attribute, element
+from softdata import SchemaBase, attribute, element
 
 
 @dataclass
