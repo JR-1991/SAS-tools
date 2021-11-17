@@ -85,7 +85,8 @@ def _generateField(
 
     # Declare dict type
     metadata_dict: Dict[str, Any] = dict(
-        type=type
+        type=type,
+        nillable=True
     )
 
     param_dict: Dict[str, Any] = {}
@@ -95,9 +96,9 @@ def _generateField(
     if name:
         metadata_dict["name"] = name
 
-    if default:
+    if default is not None:
         param_dict["default_factory"] = default
-    if default_value:
+    else:
         param_dict["default"] = default_value
 
     return field(**param_dict, metadata=metadata_dict)
@@ -118,6 +119,24 @@ def attribute(name: str = None, default: Any = None, default_value: Any = None):
     """
     return _generateField(
         type="Attribute", name=name, default=default, default_value=default_value
+    )
+
+
+@validate_arguments
+def text(name: str = None, default: Any = None, default_value: Any = None):
+    """Defines an attribute as an XML attribute.
+
+        <parent name=XYZ />
+
+    Args:
+        name (str): The name of the attribute
+        default (Any, optional): Default callable for mutable data types. Defaults to None.
+
+    Returns:
+        field: Dataclass Field element, which adds all teh metadata needed to generate an XML model
+    """
+    return _generateField(
+        type="Text", name=name, default=default, default_value=default_value
     )
 
 

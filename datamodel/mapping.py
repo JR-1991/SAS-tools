@@ -10,5 +10,4 @@ if __name__ == "__main__":
     path_to_file = "".join(CWD + xml_file)
     with open(path_to_file, "r") as f:
         xml_string = f.read()
-        print(xml_string)
         metadata = Fileinfo.fromXMLString(xml_string)
