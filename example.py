@@ -1,4 +1,4 @@
-from datamodel.datablubb import Fileinfo, Column, List_, Value, Parameter, Group
+from data_model.datablubb import Fileinfo, Column, List_, Value, Parameter, Group
 
 fileinfo = Fileinfo(version="lolololol")
 
