@@ -52,7 +52,7 @@
   </parameter>
   <parameter key="Exposure">
     <value key="name">Exposure</value>
-    <value key="value">20</value>
+    <value key="value">15</value>
     <value key="stddev">-1</value>
     <value key="unit">s</value>
     <value key="quantity">TIME</value>
@@ -94,7 +94,7 @@
   </parameter>
   <parameter key="DateTime">
     <value key="name">DateTime</value>
-    <value key="value">394191909.0555</value>
+    <value key="value">395396986.659625</value>
     <value key="stddev">-1</value>
     <value key="unit">s</value>
     <value key="quantity">TIME</value>
@@ -108,7 +108,7 @@
   </parameter>
   <parameter key="InternalScalingFactor" type="rc" index="3">
     <value key="name">InternalScalingFactor</value>
-    <value key="value">3.4083655634368237</value>
+    <value key="value">169.05500835482391</value>
     <value key="stddev">-1</value>
     <value key="unit">none</value>
     <value key="quantity">NONE</value>
@@ -143,15 +143,15 @@
   </parameter>
   <parameter key="sample maximum">
     <value key="name">sample maximum</value>
-    <value key="value">0.0013165292422754791</value>
-    <value key="stddev">7.9418277765026987E-06</value>
+    <value key="value">0.0014160156276292152</value>
+    <value key="stddev">6.6010229214004675E-06</value>
     <value key="unit">u_m^-2</value>
     <value key="quantity">COUNTS_PER_AREA</value>
   </parameter>
   <parameter key="Max desmeared">
     <value key="name">Max desmeared</value>
-    <value key="value">222.85548179101946</value>
-    <value key="stddev">5.4357241138412888</value>
+    <value key="value">4.1773793164306987</value>
+    <value key="stddev">0.1199663117781432</value>
     <value key="unit">u_m^-2</value>
     <value key="quantity">COUNTS_PER_AREA</value>
   </parameter>
@@ -165,13 +165,13 @@
       <value key="Temperature" type="Double" unit="degC" quantity="TEMPERATURE" min="-273.15" tol="0.1" db="DP">24.9</value>
     </group>
     <group isdevice="false" category="exp" sub="file" key="exp:file:Default" id="exp:file:Default">
-      <value key="Filename" type="String" max="50" db="DP">SI06_210623</value>
-      <value key="Directory" type="String" max="100" db="DP">C:\Users\Johanna\Selina\Masterarbeit\2021-06-29</value>
-      <value key="FullPath" type="String" max="150">C:\Users\Johanna\Selina\Masterarbeit\2021-06-29\SI02_210527_ACN.pdh</value>
+      <value key="Filename" type="String" max="50" db="DP">CholPalm_210713_09mm_</value>
+      <value key="Directory" type="String" max="100" db="DP">C:\Users\Johanna\Selina\Masterarbeit\CholPal</value>
+      <value key="FullPath" type="String" max="150">C:\Users\Pierre\EmptyCap_07_G14_30min.pdh</value>
       <value key="Description" type="String" max="250" db="DP"></value>
       <value key="WaitTime" type="Double" unit="s" quantity="TIME" min="0" db="DP">300</value>
       <value key="HasStdDev" type="Boolean" db="DP">true</value>
-      <value key="DateTime" type="DateTime" db="P">2021-06-29T09:45:09.0555Z</value>
+      <value key="DateTime" type="DateTime" db="P">2021-07-13T08:29:46.659625Z</value>
       <value key="User" type="String" max="50" db="DP">{DefaultUser}</value>
     </group>
     <group isdevice="false" category="exp" sub="vari" key="exp:vari:Default" id="exp:vari:Default">
@@ -207,7 +207,7 @@
       <value key="IsMeasurement" type="Boolean">true</value>
       <value key="Model" type="String" max="50">ID3003</value>
       <value key="Company" type="String">General Electric</value>
-      <value key="Engine">AntonPaar.SAXSquant.Exp.SeifertDebyeflexGeneratorEngine.saxsquant.experiment</value>
+      <value key="Engine">AntonPaar.SAXSquant.Exp.SeifertDebyeflexGeneratorEngine,saxsquant.experiment</value>
       <value key="PerformPowerDown" type="Boolean">false</value>
       <value key="Connection" list="Simulator|COM" type="String">COM</value>
       <value key="PortCOM" type="Int32">1</value>
@@ -311,7 +311,7 @@
       </list>
       <value key="Model" type="String" max="50">TCS Control Unit</value>
       <value key="Company" type="String">Anton Paar</value>
-      <value key="Engine">AntonPaar.SAXSquant.Exp.ApTCU51Engine.saxsquant.experiment</value>
+      <value key="Engine">AntonPaar.SAXSquant.Exp.ApTCU51Engine,saxsquant.experiment</value>
       <value key="Connection" list="Simulator|COM" type="String">COM</value>
       <value key="PortCOM" type="Int32">2</value>
       <value key="PortTCP" type="Int32">1026</value>
@@ -378,7 +378,7 @@
       </list>
       <value key="Model" type="String" max="50">TCS Control Unit</value>
       <value key="Company" type="String">Anton Paar</value>
-      <value key="Engine">AntonPaar.SAXSquant.Exp.ApTCU51Engine.saxsquant.experiment</value>
+      <value key="Engine">AntonPaar.SAXSquant.Exp.ApTCU51Engine,saxsquant.experiment</value>
       <value key="Connection" list="Simulator|COM" type="String">COM</value>
       <value key="PortCOM" type="Int32">2</value>
       <value key="PortTCP" type="Int32">1026</value>
@@ -401,7 +401,7 @@
       <value key="DetectorRadius" type="Double" unit="m_m" quantity="DISTANCE" min="0" db="P">-1</value>
       <value key="Dimension" type="Int32" db="DP">1</value>
       <value key="DetectionWidth" type="Double" unit="m_m" quantity="DISTANCE" min="0" max="50" db="DP">10</value>
-      <value key="Exposure" type="Double" unit="s" quantity="TIME" min="0" tol="0.1" db="DP">20</value>
+      <value key="Exposure" type="Double" unit="s" quantity="TIME" min="0" tol="0.1" db="DP">15</value>
       <value key="Averages" type="Int32" min="0" db="DP">60</value>
       <value key="Has2D" type="Boolean" db="P">false</value>
       <value key="HasIntensifierGain" type="Boolean" db="P">false</value>
@@ -417,11 +417,11 @@
       <value key="HasStdDev" type="Boolean" db="DP">true</value>
       <value key="UseDespike" type="Boolean" db="DP">true</value>
       <value key="UseDespikeOnline" type="Boolean" db="P">false</value>
-      <value key="Filename" type="String" max="50">SI02_210527_ACN</value>
-      <value key="Directory" type="String" max="100">C:\Users\Johanna\Selina\Masterarbeit\2021-06-29</value>
+      <value key="Filename" type="String" max="50">EmptyCap_07_G14_30min</value>
+      <value key="Directory" type="String" max="100">C:\Users\Pierre</value>
       <value key="Overwrite" type="Boolean">false</value>
       <value key="OverwriteEvaluation" type="Boolean">false</value>
-      <value key="ZeroAngle" type="Double" unit="none" quantity="NONE" db="P">124.09642651296829</value>
+      <value key="ZeroAngle" type="Double" unit="none" quantity="NONE" db="P">123.89832149774048</value>
       <value key="ZeroAngleUse" type="Int32" db="P">0</value>
       <value key="ZeroAngleMin" type="Int32" db="P">110</value>
       <value key="ZeroAngleMax" type="Int32" db="P">140</value>
@@ -442,7 +442,7 @@
       <value key="IsOnline" type="Boolean">true</value>
       <value key="Model" type="String" max="50">1D diode array</value>
       <value key="Company" type="String">Dectris</value>
-      <value key="Engine">AntonPaar.SAXSquant.Exp.MythenDetectorEngine.saxsquant.experiment</value>
+      <value key="Engine">AntonPaar.SAXSquant.Exp.MythenDetectorEngine,saxsquant.experiment</value>
       <value key="Connection" list="Simulator|TCP" type="String">TCP</value>
       <value key="IP" type="String">192.168.100.20</value>
       <value key="PortTCP" type="Int32">1030</value>
@@ -480,7 +480,7 @@
       <value key="IsMeasurement" type="Boolean">false</value>
       <value key="Model" type="String" max="50">ID3003 Server</value>
       <value key="Company" type="String">General Electric</value>
-      <value key="Engine">AntonPaar.SAXSquant.Exp.Id3003GeneratorServerEngine.saxsquant.experiment</value>
+      <value key="Engine">AntonPaar.SAXSquant.Exp.Id3003GeneratorServerEngine,saxsquant.experiment</value>
       <value key="PerformPowerDown" type="Boolean">false</value>
       <value key="Connection" list="|MSMQ" type="String">MSMQ</value>
       <value key="IP" type="String">255.255.255.255</value>

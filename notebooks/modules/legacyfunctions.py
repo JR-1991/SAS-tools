@@ -42,7 +42,7 @@ def SAXSplt (pfad, label, color):
     plt.xlim(0,5)
     plt.ylim(0.0001,2)    
     plt.legend(frameon=False)
-    save_name = label + '.pdf'
+    save_name = "datasets/processed/" + label + '.png'
     plt.savefig(save_name)
     plt.show()    
 
