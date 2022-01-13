@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#' xmlns:dcterms='http://purl.org/dc/terms/' xmlns:vCard='http://www.w3.org/2006/vcard/ns#'>
+  <rdf:Description rdf:about='./test_experiment.animl'>
+    <dcterms:description>An AnIML test experiment file</dcterms:description>
+    <dcterms:created rdf:parseType='Resource'>
+      <dcterms:W3CDTF>2022-01-12T14:38:30Z</dcterms:W3CDTF>
+    </dcterms:created>
+    <dcterms:creator rdf:parseType='Resource'>
+      <vCard:hasName rdf:parseType='Resource'>
+        <vCard:family-name>Giess</vCard:family-name>
+        <vCard:given-name>Torsten</vCard:given-name>
+      </vCard:hasName>
+      <vCard:hasEmail rdf:resource='torsten.giess@ibtb.uni-stuttgart.de' />
+      <vCard:organization-name>SFB 1333</vCard:organization-name>
+    </dcterms:creator>
+  </rdf:Description>
+</rdf:RDF>

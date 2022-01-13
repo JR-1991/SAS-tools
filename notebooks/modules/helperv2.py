@@ -2,26 +2,27 @@ import os
 import csv
 
 import matplotlib.pyplot as plt
+import pandas as pd
 
 from modules.legacyfunctions import *
 from modules.newfunctions import to_array
 from modules.saxslicer import SAXSlicer
 
 
-class DataExtracion:
+class DataFromAnIML:
 
-    def __init__(self, path, calibration_file):
-        self.path = path
-        self.file = calibration_file
-        self.calibration_file = self.path + self.file
-        self.slic = SAXSlicer()
-        self.data = self.slic.extract_data()
-        self.metadata = self.slic.extract_metadata()
+    def __init__(self, cal_q, cal_i, sam_q, sam_i):
+        self.cal_q = cal_q
+        self.cal_i = cal_i
+        self.sam_q = sam_q
+        self.sam_i = sam_i
 
     def process_calibration(self, input: str):
-        q = self.data["scattering_vector"]
-        i = self.data["counts_per_area"]
-        peaks = to_array(self.data)
+        q = self.cal_q
+        i = self.cal_i
+        dataframe = pd.DataFrame(list(zip(q, i)), 
+            columns = ["scattering_vector", "counts_per_area"])
+        peaks = to_array(dataframe)
         if input == "q":
             output = q
         elif input == "i":
@@ -33,14 +34,12 @@ class DataExtracion:
         return output
     
     def process_samples(self, input: str):
-        files = os.listdir(self.path)
-        list_of_files = [i for i in files if i.endswith("_lorentz.txt")]
-        data_for_plot = [i for i in files if i.endswith("[7].pdh")]
+        files = os.listdir("datasets/raw/")
+        data_for_plot = [i for i in files if i.endswith("210623[7].pdh")]
         q_sample = []
-        for current_file in list_of_files:
-            print(f"Extracting data from {current_file}.")
-            current_peak = self.slic.extract_lorentz(self.path, current_file)
-            q_sample.append(current_peak)
+        slic = SAXSlicer()
+        current_peak = slic.extract_lorentz("datasets/raw/", "SI06_210623_lorentz.txt")
+        q_sample.append(current_peak)
         if input == "q":
             output = q_sample
         elif input == "plot":
