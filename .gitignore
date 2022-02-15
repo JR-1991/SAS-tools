@@ -132,4 +132,4 @@ dmypy.json
 .vscode/
 
 # Legacy modules and files
-.legacy
+.legacy/
