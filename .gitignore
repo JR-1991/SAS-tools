@@ -130,3 +130,6 @@ dmypy.json
 
 # Visual Studio Code project settings
 .vscode/
+
+# Legacy modules and files
+.legacy
