@@ -3287,6 +3287,38 @@
         </SeriesSet>
       </Result>
     </ExperimentStep>
+    <ExperimentStep name="Data evaluation" experimentStepID="step02">
+      <Infrastructure>
+        <SampleReferenceSet/>
+      </Infrastructure>
+      <Method>
+        <Device>
+          <Name>Microsoft Windows 10 Pro Personal Computer</Name>
+          <FirmwareVersion>10.0.19044</FirmwareVersion>
+          <SerialNumber/>
+        </Device>
+        <Category name="Analysis tools">
+          <Parameter name="Analysis tool" parameterType="String">
+            <S>Python 3.9.7</S>
+          </Parameter>
+          <Parameter name="Analysis tool" parameterType="String">
+            <S>Jupyter Lab 6.1.7 </S>
+          </Parameter>
+        </Category>
+        <Category name="Analysis steps">
+          <Parameter name="Analysis step" parameterType="String">
+            <S>Spectral analysis</S>
+          </Parameter>
+          <Parameter name="Analysis step" parameterType="String">
+            <S>Calculations</S>
+          </Parameter>
+          <Parameter name="Analysis step" parameterType="String">
+            <S>Visualisation</S>
+          </Parameter>
+        </Category>
+      </Method>
+      <Result/>
+    </ExperimentStep>
   </ExperimentStepSet>
   <AuditTrailEntrySet/>
 </AnIML>

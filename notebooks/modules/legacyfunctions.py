@@ -1,17 +1,18 @@
-__all__ = ["lorentzian",
-           "LorentzFit",
-           "SAXSplt",
-           "SAXScalc",
-           "IsHexagonal",
-           "IsCubic",
-           "IsLamellar",
-           "HexagonalLatticeParameter",
-           "CubicLatticeParameter",
-           "LinReg",
-           "ScatteringVector",
-           "LatticePlane",
-           "LatticeRatio"
-          ]
+__all__ = [
+    "lorentzian",
+    "LorentzFit",
+    "SAXSplt",
+    "SAXScalc",
+    "IsHexagonal",
+    "IsCubic",
+    "IsLamellar",
+    "HexagonalLatticeParameter",
+    "CubicLatticeParameter",
+    "LinReg",
+    "ScatteringVector",
+    "LatticePlane",
+    "LatticeRatio"
+]
 
 
 import numpy as np

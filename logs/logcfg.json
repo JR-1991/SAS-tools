@@ -1,0 +1,39 @@
+{
+    "version": 1,
+    "formatters": {
+        "stream_formatter": {
+            "format": "%(asctime)s - %(name)s - %(levelname)s: %(message)s",
+            "datefmt": "%H:%M:%S"
+        },
+        "file_formatter": {
+            "format": "%(asctime)s - %(name)s - %(levelname)s: %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S"
+        }
+    },
+    "handlers": {
+        "stream_handler": {
+            "class": "logging.StreamHandler",
+            "formatter": "stream_formatter",
+            "level": "DEBUG"
+        },
+        "file_handler": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "formatter": "file_formatter",
+            "level": "INFO",
+            "filename": "./logs/app.log",
+            "mode": "a",
+            "maxBytes": 1048576,
+            "backupCount": 3
+        }
+    },
+    "loggers": {
+        "standard": {
+            "level": "DEBUG",
+            "handlers": [
+                "stream_handler",
+                "file_handler"
+            ]
+        }
+    },
+    "disable_existing_loggers": true
+}

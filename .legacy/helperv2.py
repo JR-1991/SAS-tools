@@ -17,23 +17,21 @@ class DataFromAnIML:
         self.sam_q = sam_q
         self.sam_i = sam_i
 
-    def process_calibration(self, input: str):
-        q = self.cal_q
-        i = self.cal_i
-        dataframe = pd.DataFrame(list(zip(q, i)), 
+    def format_calibration_data(self, input: str):
+        dataframe = pd.DataFrame(list(zip(self.cal_q, self.cal_i)), 
             columns = ["scattering_vector", "counts_per_area"])
         peaks = to_array(dataframe)
         if input == "q":
-            output = q
+            output = self.cal_q
         elif input == "i":
-            output = i
+            output = self.cal_i
         elif input == "peaks":
             output = peaks
         else:
-            output = q, i, peaks
+            output = self.cal_q, self.cal_i, peaks
         return output
     
-    def process_samples(self, input: str):
+    def format_sample_data(self, input: str):
         files = os.listdir("datasets/raw/")
         data_for_plot = [i for i in files if i.endswith("210623[7].pdh")]
         q_sample = []
@@ -42,6 +40,8 @@ class DataFromAnIML:
         q_sample.append(current_peak)
         if input == "q":
             output = q_sample
+        elif input == "i":
+            output = self.sam_i
         elif input == "plot":
             output = data_for_plot
         else:
@@ -49,7 +49,7 @@ class DataFromAnIML:
         return output
 
 
-class Visualisation:
+class SpectralAnalysis:
 
     def __init__(self, calibration_q, calibration_i, calibration_peaks):
         self.calibration_q = calibration_q
@@ -79,14 +79,14 @@ class Visualisation:
         return q_cholpal
 
 
-class Analysis:
+class Results:
     
     def __init__(self, samples_q, samples_for_plot, q_cholpal):
         self.samples_q = samples_q
         self.samples_for_plot = samples_for_plot
         self.q_cholpal = q_cholpal
     
-    def do_analysis(self):
+    def do_calculations(self):
         calc = []
         for peak in self.samples_q:
             calc.append(SAXScalc(self.q_cholpal, peak))
@@ -100,7 +100,7 @@ class Analysis:
             dataEvaluation.append(name)
         return dataEvaluation
 
-class Results:
+class Visualisation:
     
     def __init__(self, path_to_read, samples_for_plot, data_evaluation, path_to_write):
         self.path_to_read = path_to_read
@@ -108,9 +108,9 @@ class Results:
         self.data_evaluation = data_evaluation
         self.path_to_write = path_to_write
 
-    def write_to_tsv(self):
+    def write_to_tsv(self, filename: str):
         header = ["sample", "$d_1$", "$d_2$", "$d_3$", "$d_2/d_1$", "$d_3/d_1$","LLC phase", "a"]
-        path = self.path_to_write + "SAXS_results.tsv"
+        path = f"{self.path_to_write}/{filename}"
         with open(path, "w") as f:
             wr = csv.writer(f, delimiter="\t")
             wr.writerow(header)
@@ -118,5 +118,5 @@ class Results:
 
     def plot_and_save_data(self, colour: str = "blue"):
         for dataPlotItem in self.samples_for_plot:
-            name2 = self.path_to_read + dataPlotItem
+            name2 = f"{self.path_to_read}/{dataPlotItem}"
             SAXSplt(name2, os.path.splitext(dataPlotItem)[0], colour)
