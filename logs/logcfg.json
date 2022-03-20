@@ -11,16 +11,23 @@
         }
     },
     "handlers": {
-        "stream_handler": {
+        "std_stream_handler": {
             "class": "logging.StreamHandler",
             "formatter": "stream_formatter",
-            "level": "DEBUG"
+            "level": "DEBUG",
+            "stream": "ext://sys.stdout"
+        },
+        "err_stream_handler": {
+            "class": "logging.StreamHandler",
+            "formatter": "stream_formatter",
+            "level": "ERROR",
+            "stream": "ext://sys.stderr"
         },
         "file_handler": {
             "class": "logging.handlers.RotatingFileHandler",
             "formatter": "file_formatter",
             "level": "INFO",
-            "filename": "./logs/app.log",
+            "filename": "notebook.log",
             "mode": "a",
             "maxBytes": 1048576,
             "backupCount": 3
@@ -30,7 +37,7 @@
         "standard": {
             "level": "DEBUG",
             "handlers": [
-                "stream_handler",
+                "std_stream_handler",
                 "file_handler"
             ]
         }
