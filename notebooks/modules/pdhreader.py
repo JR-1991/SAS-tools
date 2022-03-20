@@ -44,7 +44,7 @@ class PDHReader:
         return any_whitespace
 
     def available_files(self) -> List[str]:
-        return [name for name in self.input_files]
+        return {count: value for count, value in enumerate(self.input_files)}
 
     def extract_data(self, filestem: str) -> pd.DataFrame:
         """Extract data block as `pandas.DataFrame`."""
@@ -72,3 +72,17 @@ class PDHReader:
             XML_tree = etree.parse(tmp)
             logger.debug("Metadata casted to 'etree.ElementTree'.")
         return XML_tree
+
+
+def main():
+    test = PDHReader(
+        (
+            Path.cwd()
+            / "notebooks/datasets/raw/OTAB_measurement_data/OTAB_000wtp_T025/"
+        )
+    )
+    print(test.available_files())
+
+
+if __name__ == "__main__":
+    main()
