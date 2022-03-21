@@ -7,16 +7,16 @@
     <Sample name="OTAB/water: x = 78 wt%; T = 58 C" sampleID="OTAB_078wtp_T058"/>
     <Sample name="OTAB/water: x = 93 wt%; T = 25 C" sampleID="OTAB_093wtp_T025"/>
     <Sample name="OTAB/water: x = 100 wt%; T = 95 C" sampleID="OTAB_100wtp_T095"/>
-    <Sample name="OTAC/water: x = 050 wt%; T = 25 C" sampleID="OTAC_050wtp_T025"/>
-    <Sample name="OTAC/water: x = 085 wt%; T = 74 C" sampleID="OTAC_085wtp_T074"/>
-    <Sample name="OTAC/water: x = 070 wt%; T = 25 C" sampleID="OTAC_070wtp_T025"/>
-    <Sample name="OTAC/water: x = 090 wt%; T = 10 C" sampleID="OTAC_090wtp_T010"/>
-    <Sample name="OTAC/water: x = 094 wt%; T = 50 C" sampleID="OTAC_094wtp_T050"/>
-    <Sample name="OTAC/water: x = 097 wt%; T = 30 C" sampleID="OTAC_097wtp_T030"/>
-    <Sample name="OTAC/water: x = 094 wt%; T = 62 C" sampleID="OTAC_094wtp_T062"/>
-    <Sample name="OTAC/water: x = 094 wt%; T = 68 C" sampleID="OTAC_094wtp_T068"/>
-    <Sample name="OTAC/water: x = 095 wt%; T = 70 C" sampleID="OTAC_095wtp_T070"/>
-    <Sample name="OTAC/water: x = 097 wt%; T = 65 C" sampleID="OTAC_097wtp_T065"/>
+    <Sample name="OTAC/water: x = 50 wt%; T = 25 C" sampleID="OTAC_050wtp_T025"/>
+    <Sample name="OTAC/water: x = 85 wt%; T = 74 C" sampleID="OTAC_085wtp_T074"/>
+    <Sample name="OTAC/water: x = 70 wt%; T = 25 C" sampleID="OTAC_070wtp_T025"/>
+    <Sample name="OTAC/water: x = 90 wt%; T = 10 C" sampleID="OTAC_090wtp_T010"/>
+    <Sample name="OTAC/water: x = 94 wt%; T = 50 C" sampleID="OTAC_094wtp_T050"/>
+    <Sample name="OTAC/water: x = 97 wt%; T = 30 C" sampleID="OTAC_097wtp_T030"/>
+    <Sample name="OTAC/water: x = 94 wt%; T = 62 C" sampleID="OTAC_094wtp_T062"/>
+    <Sample name="OTAC/water: x = 94 wt%; T = 68 C" sampleID="OTAC_094wtp_T068"/>
+    <Sample name="OTAC/water: x = 95 wt%; T = 70 C" sampleID="OTAC_095wtp_T070"/>
+    <Sample name="OTAC/water: x = 97 wt%; T = 65 C" sampleID="OTAC_097wtp_T065"/>
     <Sample name="OTAC/water: x = 100 wt%; T = 25 C" sampleID="OTAC_100wtp_T025"/>
   </SampleSet>
   <ExperimentStepSet>
@@ -13384,7 +13384,7 @@
         </Category>
       </Result>
     </ExperimentStep>
-    <ExperimentStep name="Sample data for OTAC/water: x = 050 wt%; T = 25 C" experimentStepID="OTAC_050wtp_T025">
+    <ExperimentStep name="Sample data for OTAC/water: x = 50 wt%; T = 25 C" experimentStepID="OTAC_050wtp_T025">
       <Infrastructure>
         <SampleReferenceSet>
           <SampleReference sampleID="OTAC_050wtp_T025" role="sample" samplePurpose="consumed"/>
@@ -15670,7 +15670,7 @@
         </Category>
       </Result>
     </ExperimentStep>
-    <ExperimentStep name="Sample data for OTAC/water: x = 085 wt%; T = 74 C" experimentStepID="OTAC_085wtp_T074">
+    <ExperimentStep name="Sample data for OTAC/water: x = 85 wt%; T = 74 C" experimentStepID="OTAC_085wtp_T074">
       <Infrastructure>
         <SampleReferenceSet>
           <SampleReference sampleID="OTAC_085wtp_T074" role="sample" samplePurpose="consumed"/>
@@ -17838,7 +17838,7 @@
         </Category>
       </Result>
     </ExperimentStep>
-    <ExperimentStep name="Sample data for OTAC/water: x = 070 wt%; T = 25 C" experimentStepID="OTAC_070wtp_T025">
+    <ExperimentStep name="Sample data for OTAC/water: x = 70 wt%; T = 25 C" experimentStepID="OTAC_070wtp_T025">
       <Infrastructure>
         <SampleReferenceSet>
           <SampleReference sampleID="OTAC_070wtp_T025" role="sample" samplePurpose="consumed"/>
@@ -20004,7 +20004,7 @@
         </Category>
       </Result>
     </ExperimentStep>
-    <ExperimentStep name="Sample data for OTAC/water: x = 090 wt%; T = 10 C" experimentStepID="OTAC_090wtp_T010">
+    <ExperimentStep name="Sample data for OTAC/water: x = 90 wt%; T = 10 C" experimentStepID="OTAC_090wtp_T010">
       <Infrastructure>
         <SampleReferenceSet>
           <SampleReference sampleID="OTAC_090wtp_T010" role="sample" samplePurpose="consumed"/>
@@ -22136,7 +22136,7 @@
         </Category>
       </Result>
     </ExperimentStep>
-    <ExperimentStep name="Sample data for OTAC/water: x = 094 wt%; T = 50 C" experimentStepID="OTAC_094wtp_T050">
+    <ExperimentStep name="Sample data for OTAC/water: x = 94 wt%; T = 50 C" experimentStepID="OTAC_094wtp_T050">
       <Infrastructure>
         <SampleReferenceSet>
           <SampleReference sampleID="OTAC_094wtp_T050" role="sample" samplePurpose="consumed"/>
@@ -24450,7 +24450,7 @@
         </Category>
       </Result>
     </ExperimentStep>
-    <ExperimentStep name="Sample data for OTAC/water: x = 097 wt%; T = 30 C" experimentStepID="OTAC_097wtp_T030">
+    <ExperimentStep name="Sample data for OTAC/water: x = 97 wt%; T = 30 C" experimentStepID="OTAC_097wtp_T030">
       <Infrastructure>
         <SampleReferenceSet>
           <SampleReference sampleID="OTAC_097wtp_T030" role="sample" samplePurpose="consumed"/>
@@ -26628,7 +26628,7 @@
         </Category>
       </Result>
     </ExperimentStep>
-    <ExperimentStep name="Sample data for OTAC/water: x = 094 wt%; T = 62 C" experimentStepID="OTAC_094wtp_T062">
+    <ExperimentStep name="Sample data for OTAC/water: x = 94 wt%; T = 62 C" experimentStepID="OTAC_094wtp_T062">
       <Infrastructure>
         <SampleReferenceSet>
           <SampleReference sampleID="OTAC_094wtp_T062" role="sample" samplePurpose="consumed"/>
@@ -28942,7 +28942,7 @@
         </Category>
       </Result>
     </ExperimentStep>
-    <ExperimentStep name="Sample data for OTAC/water: x = 094 wt%; T = 68 C" experimentStepID="OTAC_094wtp_T068">
+    <ExperimentStep name="Sample data for OTAC/water: x = 94 wt%; T = 68 C" experimentStepID="OTAC_094wtp_T068">
       <Infrastructure>
         <SampleReferenceSet>
           <SampleReference sampleID="OTAC_094wtp_T068" role="sample" samplePurpose="consumed"/>
@@ -31256,7 +31256,7 @@
         </Category>
       </Result>
     </ExperimentStep>
-    <ExperimentStep name="Sample data for OTAC/water: x = 095 wt%; T = 70 C" experimentStepID="OTAC_095wtp_T070">
+    <ExperimentStep name="Sample data for OTAC/water: x = 95 wt%; T = 70 C" experimentStepID="OTAC_095wtp_T070">
       <Infrastructure>
         <SampleReferenceSet>
           <SampleReference sampleID="OTAC_095wtp_T070" role="sample" samplePurpose="consumed"/>
@@ -33438,7 +33438,7 @@
         </Category>
       </Result>
     </ExperimentStep>
-    <ExperimentStep name="Sample data for OTAC/water: x = 097 wt%; T = 65 C" experimentStepID="OTAC_097wtp_T065">
+    <ExperimentStep name="Sample data for OTAC/water: x = 97 wt%; T = 65 C" experimentStepID="OTAC_097wtp_T065">
       <Infrastructure>
         <SampleReferenceSet>
           <SampleReference sampleID="OTAC_097wtp_T065" role="sample" samplePurpose="consumed"/>
