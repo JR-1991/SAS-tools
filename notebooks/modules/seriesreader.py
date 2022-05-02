@@ -1,7 +1,5 @@
-from datetime import date
-import os
 from pathlib import Path
-from typing import List, Union
+from typing import List
 
 import pandas as pd
 from pyaniml import AnIMLDocument
@@ -12,11 +10,8 @@ print(f"Initializing logger for '{__name__}'.")
 logger = logger_from_json(Path(__file__).parents[2] / "logs/")
 logger.name = __name__
 
-cwd = Path.cwd()
-path_to_datasets = cwd / "./notebooks/datasets/"
 
-
-class TSVWriter:
+class SeriesReader:
     """Create a TSV file from a SeriesSet within an AnIML document."""
 
     def __init__(self, animl_doc: AnIMLDocument):
@@ -32,7 +27,7 @@ class TSVWriter:
         )
 
     def __repr__(self):
-        return "TSVWriter"
+        return "SeriesReader"
 
     def available_seriesIDs(self) -> List[str]:
         available_seriesIDs = []
@@ -53,7 +48,7 @@ class TSVWriter:
                     pass
                 # Check Categories
                 try:
-                    for category in result.categories:
+                    for category in result.content:
                         # Check for Series in Result.Category
                         try:
                             available_seriesIDs.append(category.id[:-2])
@@ -101,7 +96,7 @@ class TSVWriter:
                         pass
                     # Check Categories
                     try:
-                        for category in result.categories:
+                        for category in result.content:
                             # Check for Series in Result.Category
                             try:
                                 if sample_id in category.id:
@@ -125,27 +120,3 @@ class TSVWriter:
         return pd.DataFrame(
             {key: pd.Series(value) for key, value in dict_of_data.items()}
         )
-
-    def create_tsv(
-        self, df: pd.DataFrame, path: Union[str, bytes, os.PathLike]
-    ) -> None:
-        file = Path(path)
-        df.to_csv(path_or_buf=file, sep="\t", index=False)
-
-
-def main():
-    path = path_to_datasets / "download/fairsaxs_220316.animl"
-    with path.open("r") as f:
-        xml_string = f.read()
-        doc = AnIMLDocument.fromXMLString(xml_string)
-
-    test = TSVWriter(doc)
-    test.add_seriesID(
-        ["OTAB_095wtp_T030", "OTAB_100wtp_T090", "CholPal_20220214"]
-    )
-    df = test.create_dataframe()
-    test.create_tsv(df, (path_to_datasets / "processed/fairsaxs_220316.tsv"))
-
-
-if __name__ == "__main__":
-    main()
