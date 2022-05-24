@@ -1,30 +1,15 @@
-from pathlib import Path
 from typing import List
 
 import pandas as pd
 from pyaniml import AnIMLDocument
-
-from modules.loggerfromjson import logger_from_json
-
-print(f"Initializing logger for '{__name__}'.")
-logger = logger_from_json(Path(__file__).parents[2] / "logs/")
-logger.name = __name__
 
 
 class SeriesReader:
     """Create a TSV file from a SeriesSet within an AnIML document."""
 
     def __init__(self, animl_doc: AnIMLDocument):
-        logger.debug(
-            f"Constructor called, '{self.__repr__()}'@{hex(id(self))} initialised."
-        )
         self.animl_doc = animl_doc
         self.seriesID = []
-
-    def __del__(self):
-        logger.debug(
-            f"Destructor called, '{self.__repr__()}'@{hex(id(self))} deleted."
-        )
 
     def __repr__(self):
         return "SeriesReader"

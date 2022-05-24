@@ -1,5 +1,6 @@
 import numpy
 
+
 def infer_type(var_to_infer) -> str:
     if isinstance(var_to_infer, str):
         return "String"
