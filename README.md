@@ -1,5 +1,37 @@
-# FAIR and scalable management of small-angle X-ray scattering data
+# SAS-tools – FAIR tools for small-angle scattering (SAS) data
 
-> Giess, Torsten; Itzigehl, Selina; Range, Jan Peter; Bruckner, Johanna R.; Pleiss, Jürgen
+Welcome to the SAS-tools repository! We develop FAIR, scalable, and sustainable tools for use in analyzing and managing small-angle X-ray scattering (SAXS) data, small-angle neutron scattering (SANS) data, and more.
 
-This repository contains the Jupyter Notebooks, as well as the required modules to 'FAIR and scalable management of small-angle X-ray scattering data'.
+## 🛠️ What is SAS-tools?
+
+The SAS-tools contains useful functions and classes for reading, transforming, working with, analyzing, managing, and storing SAS data (called **tools**). These tools are generic, making it easy to use and re-purpose them.
+
+## ⚡️ Quick Start
+
+Get started with SAS-tools by installing the package from PyPI:
+
+```bash
+python -m pip install SAS-tools
+```
+
+Alternatively, build SAS-tools from source:
+
+```bash
+git clone https://github.com/FAIRChemistry/SAS-tools/
+cd SAS-tools
+python setup.py install
+```
+
+## 🔖 Example Code
+
+*coming soon*
+
+## ⚖️ License
+
+Copyright 2022 FAIRChemistry
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
