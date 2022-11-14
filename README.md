@@ -1,4 +1,4 @@
-# SAS-tools – FAIR tools for small-angle scattering (SAS) data
+# SAS-tools – FAIR tools for small-angle scattering data
 
 Welcome to the SAS-tools repository! We develop FAIR, scalable, and sustainable tools for use in analyzing and managing small-angle X-ray scattering (SAXS) data, small-angle neutron scattering (SANS) data, and more.
 
