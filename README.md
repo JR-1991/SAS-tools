@@ -4,7 +4,7 @@ Welcome to the SAS-tools repository! We develop FAIR, scalable, and sustainable 
 
 ## 🛠️ What is SAS-tools?
 
-The SAS-tools contains useful functions and classes for reading, transforming, working with, analyzing, managing, and storing SAS data (called **tools**). These tools are generic, making it easy to use and re-purpose them. Published workflows using SAS-tools can be found in the [SAS-workflows](https://github.com/FAIRChemistry/SAS-workflows) repository, which can serve as examples and inspiration.
+SAS-tools contains useful functions and classes for reading, transforming, working with, analyzing, managing, and storing SAS data (called **tools**). These tools are generic, making it easy to use and re-purpose them. Published workflows using SAS-tools can be found in the [SAS-workflows](https://github.com/FAIRChemistry/SAS-workflows) repository, which can serve as examples and inspiration.
 
 ## ⚡️ Quick Start
 
