@@ -12,7 +12,7 @@ class PrepareStandard:
     """
 
     def __init__(
-        self, standard: SAXSStandards = None, q_std_lit: list = None
+        self, standard: SAXSStandards = None, q_std_lit: list[float] = None
     ) -> None:
         """
         Select standard for calibration of SAXS data from
@@ -38,7 +38,9 @@ class PrepareStandard:
                 f"SAXS Standard {standard.name} is not yet implemented."
             )
 
-    def calculate_scattering_vector(self, d_std_lit: list = None) -> list:
+    def calculate_scattering_vector(
+        self, d_std_lit: list[float] = None
+    ) -> list[float]:
         """
         Calculate scattering vector `q_std_lit` (nm^-1) for calibration
         from literature lattice plane distance `d_std_lit` (nm).
@@ -71,7 +73,9 @@ class PrepareStandard:
         self.q_std_lit = [(2 * np.pi) / d for d in d_std_lit]
         return self.q_std_lit
 
-    def calculate_linear_regression(self, q_std_meas: list) -> tuple:
+    def calculate_linear_regression(
+        self, q_std_meas: list[float]
+    ) -> tuple[float]:
         """
         Calculate the linear regression from `q_std_meas` against
         `q_std_lit` using `numpy.polyfit()` and return `slope` and
@@ -90,20 +94,14 @@ class PrepareStandard:
 class SAXSAnalyzer:
     """Contains methods for analyzing SAXS data."""
 
-    def data_calibration(m: float, x: float, b: float) -> float:
-        """
-        Calculate linear regression from
+    def __init__(self) -> None:
+        self.q_corr
 
-        Args:
-            m (float): _description_
-            x (float): _description_
-            b (float): _description_
-
-        Returns:
-            float: _description_
-        """
-        y = m * x + b
-        return y
+    def data_calibration(
+        self, slope: float, q_meas: list[float], intercept: float
+    ) -> list[float]:
+        self.q_corr = slope * q_meas + intercept
+        return self.q_corr
 
     def calculate_lattice_plane(q: float) -> float:
         d = (2 * np.pi) / q
