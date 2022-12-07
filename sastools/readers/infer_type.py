@@ -1,4 +1,4 @@
-"""Hier könnte Ihre Werbung stehen."""
+"""Function for infering AnIML data type from Python data types."""
 
 import numpy
 
