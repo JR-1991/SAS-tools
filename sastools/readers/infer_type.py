@@ -1,3 +1,5 @@
+"""Hier könnte Ihre Werbung stehen."""
+
 import numpy
 
 
