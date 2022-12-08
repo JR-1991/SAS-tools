@@ -92,14 +92,13 @@ class Analyzer():
         x_range = x_max - x_min
         y_max = np.max(speci['data']['y'])
         for i, basis_func in enumerate(speci['models']):
-            prefix = f'm{i}_'
+            prefix = f'model{i}_'
             model = getattr(models, basis_func['type'])(prefix=prefix)
-            if basis_func['type'] in ['GaussianModel', 'LorentzianModel', 'VoigtModel']: # for now VoigtModel has gamma constrained to sigma
+            if basis_func['type'] in ['GaussianModel', 'LorentzianModel', 'VoigtModel']: # for VoigtModel gamma is constrained to sigma
                 model.set_param_hint('sigma', min=1e-6, max=x_range)
                 model.set_param_hint('center', min=x_min, max=x_max)
                 model.set_param_hint('height', min=1e-6, max=1.1*y_max)
                 model.set_param_hint('amplitude', min=1e-6)
-                # default guess is horrible!! do not use guess()
                 default_params = {
                     prefix+'center': x_min + x_range * random.random(),
                     prefix+'height': y_max * random.random(),
@@ -132,8 +131,8 @@ class Analyzer():
         if only_load_model_result_and_plot == False:
             if start_from_json_file == False:
                 self.exp_data = experimental_data
-                self.x = self.exp_data['Angle_exp'].values.tolist()
-                self.y = self.exp_data['Intensity_exp'].values.tolist()
+                self.x = self.exp_data.iloc[:,0].values.tolist()
+                self.y = self.exp_data.iloc[:,0].values.tolist()
 
                 # for manual set specifications only
                 self.n_models= kwargs['number_of_models']
