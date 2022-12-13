@@ -3,22 +3,35 @@
 import numpy as np
 
 from enums import SAXSStandards
+from llcphase import LLCPhase
+from llcphases import (
+    CubicPhase,
+    HexagonalPhase,
+    IndeterminatePhase,
+    LamellarPhase,
+)
 
 
 class PrepareStandard:
-    """
-    Contains methods for preparing the calibration of measured data
+    """Contains methods for preparing the calibration of measured data
     using a standard.
     """
 
     def __init__(
         self, standard: SAXSStandards = None, q_std_lit: list[float] = None
     ) -> None:
-        """
-        Select standard for calibration of SAXS data from
+        """Select standard for calibration of SAXS data from
         `SAXSStandards` enum. If no standard is given, `q_std_lit`
         values have to be provided directly or calculated from
         `d_std_lit` manually using `calculate_scattering_vector()`.
+
+        Args:
+            standard (SAXSStandards, optional): Common SAXS standard used in experiment. Defaults to None.
+            q_std_lit (list[float], optional): Literature values for scattering vector of standard used in experiment. Defaults to None.
+
+        Raises:
+            ValueError: If both standard and q_std_lit are provided.
+            NotImplementedError: If not yet implemented SAXS standard is passed.
         """
         self.standard = standard
         self.q_std_lit = q_std_lit
@@ -41,15 +54,19 @@ class PrepareStandard:
     def calculate_scattering_vector(
         self, d_std_lit: list[float] = None
     ) -> list[float]:
-        """
-        Calculate scattering vector `q_std_lit` (nm^-1) for calibration
-        from literature lattice plane distance `d_std_lit` (nm).
+        """Calculate scattering vector `q_std_lit` (nm^-1) for
+        calibration from literature lattice plane distance `d_std_lit`
+        (nm).
 
         Args:
-            d_std_lit (float): Lattice plane distance from literature
+            d_std_lit (list[float], optional): Lattice plane distance from literature. Defaults to None.
+
+        Raises:
+            ValueError: If d_std_lit is not given and neither a standard nor q_std_lit have been initialized.
+            ValueError: If d_std_lit list is empty.
 
         Returns:
-            float: Scattering vector q_std_lit
+            list[float]: Scattering vector q_std_lit.
         """
         if self.q_std_lit:
             print(
@@ -76,43 +93,77 @@ class PrepareStandard:
     def calculate_linear_regression(
         self, q_std_meas: list[float]
     ) -> tuple[float]:
-        """
-        Calculate the linear regression from `q_std_meas` against
+        """Calculate the linear regression from `q_std_meas` against
         `q_std_lit` using `numpy.polyfit()` and return `slope` and
         `intercept` as a tuple.
 
         Args:
-            q_std_meas (list): List of measured q values for standard
+            q_std_meas (list): List of measured q values for standard.
 
         Returns:
-            tuple: Tuple of slope and intercept from linear regression
+            tuple: Tuple of slope and intercept from linear regression.
         """
         slope, intercept = np.polyfit(x=q_std_meas, y=self.q_std_lit, deg=1)
         return (slope, intercept)
 
 
-class SAXSAnalyzer:
-    """Contains methods for analyzing SAXS data."""
+class LLCAnalyzer:
+    """Contains methods for analyzing SAXS data of LLC phases."""
 
     def __init__(self) -> None:
-        self.q_corr
+        self._q_corr = []
+        self._d = []
+        self._d_ratio = []
 
-    def data_calibration(
+    @property
+    def q_corr(self) -> list[float]:
+        """Get calibrated scattering vectors."""
+        return self._q_corr
+
+    @property
+    def d(self) -> list[float]:
+        """Get lattice plane distances."""
+        return self._d
+
+    @property
+    def d_ratio(self) -> list[float]:
+        """Get lattice plane ratios"""
+        return self._d_ratio
+
+    def __calculate_lattice_plane_distances(self) -> None:
+        # Calculate and return the lattice planes `d` from list of
+        # calibrated scattering vectors `q_corr`.
+        self._d = [(2 * np.pi) / q for q in self.q_corr]
+
+    def __calculate_lattice_ratio(self) -> None:
+        # Calculate and return the lattice plane ratios `d_ratio` from
+        # list of lattice planes `d`.
+        self._d_ratio = [d / self.d[0] for d in self.d[1:]]
+
+    def calibrate_data(
         self, slope: float, q_meas: list[float], intercept: float
-    ) -> list[float]:
-        self.q_corr = slope * q_meas + intercept
-        return self.q_corr
+    ) -> None:
+        """Calibrate list of measured scattering vectors `q_meas` with
+        `(slope, intercept)` tuple from `calculate_linear_regression()`
+        method of `PrepareStandard` class and return list of calibrated
+        scattering vectors `q_corr`.
 
-    def calculate_lattice_plane(q: float) -> float:
-        d = (2 * np.pi) / q
-        return d
+        Args:
+            slope (float): Slope of calculated linear regression from measured standard against literature values.
+            q_meas (list[float]): List of scattering vectors from raw measured data.
+            intercept (float): Intercept of calculated linear regression from measured standard against literature values.
+        """
+        self._q_corr = [slope * q + intercept for q in q_meas]
+        self.__calculate_lattice_plane_distances()
+        self.__calculate_lattice_ratio()
 
-    def calculate_lattice_ratio(d: float, d_0: float) -> float:
-        d_ratio = d / d_0
-        return d_ratio
+    def determine_phase(self) -> LLCPhase:
+        """Determine the LLC phase of the sample from `d_ratios` and
+        return the appropriate `LLCPhase` object.
 
-    # V1 depends on space group
-    def determine_phase(d_ratios: list) -> bool:
+        Returns:
+            LLCPhase: Class holding relevant phase information of corresponding LLC phase.
+        """
         H1 = [
             (1 / np.sqrt(3)),
             (1 / np.sqrt(4)),
@@ -127,35 +178,58 @@ class SAXSAnalyzer:
         ]
         La = [(1 / 2), (1 / 3), (1 / 4), (1 / 5)]
 
-        for i, j in enumerate(d_ratios):
-            if (abs(d_ratios[i] - H1[i])) < 0.03:
-                return "hexagonal"
-            elif (abs(d_ratios[i] - V1[i])) < 0.03:
-                return "cubic"
-            elif (abs(d_ratios[i] - La[i])) < 0.03:
-                return "lamellar"
+        for i, _ in enumerate(self.d_ratio):
+            if (abs(self.d_ratio[i] - H1[i])) < 0.03:
+                return HexagonalPhase
+            elif (abs(self.d_ratio[i] - V1[i])) < 0.03:
+                return CubicPhase
+            elif (abs(self.d_ratio[i] - La[i])) < 0.03:
+                return LamellarPhase
             else:
-                return "indeterminate"
+                return IndeterminatePhase
 
-    # Space group has to be considered
-    def calculate_a_H1(d: float, h: int, k: int) -> float:
-        a_H1 = d * np.sqrt((4 / 3) * ((h**2 + k**2 + (h * k))))
-        return a_H1
+    def calculate_d_reciprocal(
+        self, cubic_phase: CubicPhase, peak_center: list[float]
+    ) -> list[float]:
+        """Calculate the reciprocal lattice plane distances
+        `d_reciprocal` from the `peak_centers` determined through
+        lorentzian fitting and both set the corresponding property of
+        the `cubic_phase` provided, and also return the list of
+        `d_reciprocal` directly.
 
-    def calculate_a_V1(d: float, h: int, k: int, l: int) -> float:
-        a_V1 = d * (np.sqrt((h**2) + (k**2) + (l**2)))
-        return a_V1
+        Args:
+            cubic_phase (CubicPhase): Cubic phase of which d_reciprocal should be calculated.
+            peak_center (list[float]): Peak centers determined by lorentzian fitting for the cubic phase.
 
-    # Specific for space group
-    def d_reciprocal(peak_center):
-        d_reciprocal = (peak_center) / (2 * np.pi)
+        Returns:
+            list[float]: List of reciprocal lattice plane distances of cubic phase.
+        """
+        d_reciprocal = [i / (2 * np.pi) for i in peak_center]
+        cubic_phase.d_reciprocal = d_reciprocal
         return d_reciprocal
 
-    def sqrt_miller(h, k, l):
-        sq_root = np.sqrt(h**2 + k**2 + l**2)
+    def calculate_sqrt_miller(
+        self, cubic_phase: CubicPhase, miller_indices: tuple[list[int]]
+    ) -> list[int]:
+        """Calculate the square roots `sq_root` of the `miller_indices`
+        passed to this method and both set the corresponding property of
+        the `cubic_phase` provided, and also return the list of
+        `sq_root` directly.
+
+        Args:
+            cubic_phase (CubicPhase): Cubic phase of which the square root of miller indices should be calculated.
+            miller_indices (tuple[list[int]]): Miller indices of the cubic phase of which the square root should be calculated.
+
+        Returns:
+            list[int]: List of square roots of miller indices of cubic phase.
+        """
+        sq_root = [
+            np.sqrt(
+                miller_indices[0][i] ** 2
+                + miller_indices[1][i] ** 2
+                + miller_indices[2][i] ** 2
+            )
+            for i, _ in enumerate(miller_indices[0])
+        ]
+        cubic_phase.sqrt_miller = sq_root
         return sq_root
-
-
-if __name__ == "__main__":
-    test = PrepareStandard(standard=SAXSStandards.CHOLESTERYL_PALMITATE)
-    print(test.calculate_linear_regression(q_std_meas=[1, 2, 3]))
