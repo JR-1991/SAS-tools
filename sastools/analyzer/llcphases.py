@@ -41,7 +41,7 @@ class HexagonalPhase(LLCPhase):
         return self._space_group
 
     @property
-    def miller_indices(self) -> tuple[list[int]]:
+    def miller_indices(self) -> tuple[list[int], list[int], list[int]]:
         """Get miller indices of hexagonal phase."""
         self._miller_indices = LLCMillerIndices[self._space_group.name].value
         return self._miller_indices
@@ -111,7 +111,7 @@ class CubicPhase(LLCPhase):
         return self._space_group
 
     @property
-    def miller_indices(self) -> tuple[list[int]]:
+    def miller_indices(self) -> tuple[list[int], list[int], list[int]]:
         """Get miller indices of cubic phase."""
         self._miller_indices = LLCMillerIndices[self._space_group.name].value
         return self._miller_indices

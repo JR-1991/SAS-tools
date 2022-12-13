@@ -92,7 +92,7 @@ class PrepareStandard:
 
     def calculate_linear_regression(
         self, q_std_meas: list[float]
-    ) -> tuple[float]:
+    ) -> tuple[float, float]:
         """Calculate the linear regression from `q_std_meas` against
         `q_std_lit` using `numpy.polyfit()` and return `slope` and
         `intercept` as a tuple.
@@ -209,7 +209,9 @@ class LLCAnalyzer:
         return d_reciprocal
 
     def calculate_sqrt_miller(
-        self, cubic_phase: CubicPhase, miller_indices: tuple[list[int]]
+        self,
+        cubic_phase: CubicPhase,
+        miller_indices: tuple[list[int], list[int], list[int]],
     ) -> list[int]:
         """Calculate the square roots `sq_root` of the `miller_indices`
         passed to this method and both set the corresponding property of
@@ -218,7 +220,7 @@ class LLCAnalyzer:
 
         Args:
             cubic_phase (CubicPhase): Cubic phase of which the square root of miller indices should be calculated.
-            miller_indices (tuple[list[int]]): Miller indices of the cubic phase of which the square root should be calculated.
+            miller_indices (tuple[list[int], list[int], list[int]]): Miller indices of the cubic phase of which the square root should be calculated.
 
         Returns:
             list[int]: List of square roots of miller indices of cubic phase.

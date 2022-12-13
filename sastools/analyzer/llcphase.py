@@ -19,7 +19,7 @@ class LLCPhase(ABC):
 
     @property
     @abstractmethod
-    def miller_indices(self) -> tuple[list[int]]:
+    def miller_indices(self) -> tuple[list[int], list[int], list[int]]:
         ...
 
     @property
