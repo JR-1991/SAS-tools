@@ -20,8 +20,8 @@ class SeriesReader:
             animl_doc (AnIMLDocument): AnIML document containing one or more Series to be read.
         """
         self._animl_doc = animl_doc
-        self._available_seriesID = []
-        self._selected_seriesID = []
+        self._available_seriesIDs = []
+        self._selected_seriesIDs = []
 
     def __repr__(self):
         return "AnIML Series-element Reader"
@@ -71,7 +71,7 @@ class SeriesReader:
             pandas.DataFrame: DataFrame containing all Series elements selected by their seriesID attribute.
         """
         dict_of_data = {}
-        for sample_id in self._selected_seriesID:
+        for sample_id in self._selected_seriesIDs:
             experiment_steps = (
                 self._animl_doc.experiment_step_set.experiment_steps
             )
@@ -125,16 +125,15 @@ class SeriesReader:
     @property
     def available_seriesID(self) -> list[str]:
         """Get SeriesID elements available in the AnIML document."""
-        self._available_seriesID = self._parse_available_seriesIDs()
-        self._available_seriesID = ["test0", "test1", "test2"]
-        return self._available_seriesID
+        self._available_seriesIDs = self._parse_available_seriesIDs()
+        return self._available_seriesIDs
 
     @property
     def selected_seriesID(self) -> list[str]:
         """Get list of seriesID selected so far."""
-        return self._selected_seriesID
+        return self._selected_seriesIDs
 
     @selected_seriesID.setter
     def selected_seriesID(self, list_of_ids: list[str]) -> None:
         for series_id in list_of_ids:
-            self._selected_seriesID.append(series_id)
+            self._selected_seriesIDs.append(series_id)
