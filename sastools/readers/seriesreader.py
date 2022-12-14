@@ -123,17 +123,17 @@ class SeriesReader:
         )
 
     @property
-    def available_seriesID(self) -> list[str]:
+    def available_seriesIDs(self) -> list[str]:
         """Get SeriesID elements available in the AnIML document."""
         self._available_seriesIDs = self._parse_available_seriesIDs()
         return self._available_seriesIDs
 
     @property
-    def selected_seriesID(self) -> list[str]:
+    def selected_seriesIDs(self) -> list[str]:
         """Get list of seriesID selected so far."""
         return self._selected_seriesIDs
 
-    @selected_seriesID.setter
-    def selected_seriesID(self, list_of_ids: list[str]) -> None:
+    @selected_seriesIDs.setter
+    def selected_seriesIDs(self, list_of_ids: list[str]) -> None:
         for series_id in list_of_ids:
             self._selected_seriesIDs.append(series_id)
