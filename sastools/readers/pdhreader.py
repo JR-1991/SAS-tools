@@ -5,7 +5,6 @@ import os
 from pathlib import Path
 import re
 import tempfile
-from typing import List, Optional, Union
 
 import pandas as pd
 from lxml import etree
@@ -14,27 +13,48 @@ from lxml import etree
 class PDHReader:
     """Separate data block and XML metadata footer of PDH files."""
 
-    def __init__(
-        self, path_to_directory: Optional[Union[str, bytes, os.PathLike]]
-    ):
+    def __init__(self, path_to_directory: str | bytes | os.PathLike):
+        """Pass the path to a directory containing PDH-type files to be
+        read.
+
+        Args:
+            path_to_directory (str | bytes | os.PathLike): Path to a directory containing PDH-type files.
+        """
         path = list(Path(path_to_directory).glob("*.pdh"))
-        self.input_files = {file.stem: file for file in path if file.is_file()}
+        self._available_files = {
+            file.stem: file for file in path if file.is_file()
+        }
 
     def __repr__(self):
-        return "PDHReader"
+        return "PDH Reader"
 
     def _line_is_xml(self, line_in_file):
-        """Match n whitespaces, followed by an XML opening tag `<`."""
+        # Match n whitespaces, followed by an XML opening tag `<`.
         any_whitespace = re.compile("\s*<").match(line_in_file)
         return any_whitespace
 
-    def available_files(self) -> List[str]:
-        return {count: value for count, value in enumerate(self.input_files)}
+    def enumerate_available_files(self) -> dict[int, str]:
+        """Enumerate the PDH files available in the given directory and
+        return a dictionary with their index and name.
+
+        Returns:
+            dict[int, str]: Indices and names of available files.
+        """
+        return {
+            count: value for count, value in enumerate(self.available_files)
+        }
 
     def extract_data(self, filestem: str) -> pd.DataFrame:
-        """Extract data block as `pandas.DataFrame`."""
+        """Extract only data block as a `pandas.DataFrame`.
+
+        Args:
+            filestem (str): Name of the file (only stem) of which the data is to be extracted.
+
+        Returns:
+            pandas.DataFrame: DataFrame containing only the data from the file.
+        """
         dataframe = pd.read_table(
-            self.input_files[filestem],
+            self._available_files[filestem],
             delimiter="   ",
             usecols=[0, 1],
             names=["scattering_vector", "counts_per_area"],
@@ -45,9 +65,16 @@ class PDHReader:
         return dataframe
 
     def extract_metadata(self, filestem: str) -> etree.ElementTree:
-        """Extract XML metadata footer as `etree.ElementTree`."""
+        """Extract XML metadata footer as an `etree.ElementTree`.
+
+        Args:
+            filestem (str): Name of the file (only stem) of which the metadata is to be extracted.
+
+        Returns:
+            etree.ElementTree: ElementTree containing only the metadata from the file.
+        """
         with tempfile.NamedTemporaryFile(mode="r+") as tmp:
-            with self.input_files[filestem].open("r") as f:
+            with self._available_files[filestem].open("r") as f:
                 for line in f:
                     if self._line_is_xml(line) is not None:
                         tmp.write(line)
@@ -55,16 +82,7 @@ class PDHReader:
             XML_tree = etree.parse(tmp)
         return XML_tree
 
-
-def main():
-    test = PDHReader(
-        (
-            Path.cwd()
-            / "notebooks/datasets/raw/OTAB_measurement_data/OTAB_000wtp_T025/"
-        )
-    )
-    print(test.available_files())
-
-
-if __name__ == "__main__":
-    main()
+    @property
+    def available_files(self) -> list[str]:
+        """Get file available in directory."""
+        return self._available_files

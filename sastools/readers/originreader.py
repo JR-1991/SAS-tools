@@ -1,22 +1,23 @@
 """Reader for Origin TXT output files containing Lorentzian data."""
 
-
-from dataclasses import dataclass
+import os
 from pathlib import Path
 
 import pandas as pd
 
 
-@dataclass
-class LorentzianReader:
-    """Dataclass for handling Lorentzian data from Origin TXT file."""
+class OriginReader:
+    """Read Lorentzian data from Origin TXT file."""
 
-    file: str
+    def __init__(self, file: str | bytes | os.PathLike) -> None:
+        """Pass path to TXT file with Origin output.
 
-    def __post_init__(self):
-        file = Path(self.file)
-        with file.open("r") as txt:
-            self.dataframe = pd.read_table(
+        Args:
+            file (str | bytes | os.PathLike): TXT file containing Lorentzian data created with Origin.
+        """
+        self._file = Path(file)
+        with self._file.open("r") as txt:
+            self._dataframe = pd.read_table(
                 filepath_or_buffer=txt,
                 header=0,
                 names=[
@@ -30,13 +31,19 @@ class LorentzianReader:
                 ],
                 engine="python",
             )
-        self.xc_values = self.dataframe.loc[self.dataframe["symbol"] == "xc"]
+        self._xc_values = self._dataframe.loc[
+            self._dataframe["symbol"] == "xc"
+        ]
 
     def __repr__(self):
-        return "LorentzianReader"
+        return "Origin Reader"
 
-    def get_full_dataframe(self):
-        return self.dataframe
+    @property
+    def full_dataframe(self) -> pd.DataFrame:
+        """Get full Pandas DataFrame."""
+        return self._dataframe
 
-    def get_xc_dataframe(self):
-        return self.xc_values
+    @property
+    def xc_dataframe(self) -> pd.DataFrame:
+        """Get only 'xc' values of Pandas DataFrame."""
+        return self._xc_values
