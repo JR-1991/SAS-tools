@@ -10,6 +10,7 @@ from llcphases import (
     IndeterminatePhase,
     LamellarPhase,
 )
+from sastools.analyzer.enums import LLCSpaceGroups
 
 
 class PrepareStandard:
@@ -130,11 +131,6 @@ class LLCAnalyzer:
         # calibrated scattering vectors `q_corr`.
         self._d = [(2 * np.pi) / q for q in self.q_corr]
 
-    def _calculate_lattice_ratio(self) -> None:
-        # Calculate and return the lattice plane ratios `d_ratio` from
-        # list of lattice planes `d`.
-        self._d_ratio = [d / self.d[0] for d in self.d[1:]]
-
     def calibrate_data(
         self, slope: float, q_meas: list[float], intercept: float
     ) -> None:
@@ -149,8 +145,13 @@ class LLCAnalyzer:
             intercept (float): Intercept of calculated linear regression from measured standard against literature values.
         """
         self._q_corr = [slope * q + intercept for q in q_meas]
+
+    def calculate_lattice_ratio(self) -> None:
+        """Calculate and return the lattice plane ratios `d_ratio` from
+        list of lattice planes `d`.
+        """
         self._calculate_lattice_plane_distances()
-        self._calculate_lattice_ratio()
+        self._d_ratio = [d / self.d[0] for d in self.d[1:]]
 
     def determine_phase(self) -> LLCPhase:
         """Determine the LLC phase of the sample from `d_ratios` and
@@ -175,61 +176,13 @@ class LLCAnalyzer:
 
         for i, _ in enumerate(self.d_ratio):
             if (abs(self.d_ratio[i] - H1[i])) < 0.03:
-                return HexagonalPhase
+                return HexagonalPhase()
             elif (abs(self.d_ratio[i] - V1[i])) < 0.03:
-                return CubicPhase
+                return CubicPhase()
             elif (abs(self.d_ratio[i] - La[i])) < 0.03:
-                return LamellarPhase
+                return LamellarPhase()
             else:
-                return IndeterminatePhase
-
-    def calculate_d_reciprocal(
-        self, cubic_phase: CubicPhase, peak_center: list[float]
-    ) -> list[float]:
-        """Calculate the reciprocal lattice plane distances
-        `d_reciprocal` from the `peak_centers` determined through
-        lorentzian fitting and both set the corresponding property of
-        the `cubic_phase` provided, and also return the list of
-        `d_reciprocal` directly.
-
-        Args:
-            cubic_phase (CubicPhase): Cubic phase of which d_reciprocal should be calculated.
-            peak_center (list[float]): Peak centers determined by lorentzian fitting for the cubic phase.
-
-        Returns:
-            list[float]: List of reciprocal lattice plane distances of cubic phase.
-        """
-        d_reciprocal = [i / (2 * np.pi) for i in peak_center]
-        cubic_phase.d_reciprocal = d_reciprocal
-        return d_reciprocal
-
-    def calculate_sqrt_miller(
-        self,
-        cubic_phase: CubicPhase,
-        miller_indices: tuple[list[int], list[int], list[int]],
-    ) -> list[int]:
-        """Calculate the square roots `sq_root` of the `miller_indices`
-        passed to this method and both set the corresponding property of
-        the `cubic_phase` provided, and also return the list of
-        `sq_root` directly.
-
-        Args:
-            cubic_phase (CubicPhase): Cubic phase of which the square root of miller indices should be calculated.
-            miller_indices (tuple[list[int], list[int], list[int]]): Miller indices of the cubic phase of which the square root should be calculated.
-
-        Returns:
-            list[int]: List of square roots of miller indices of cubic phase.
-        """
-        sq_root = [
-            np.sqrt(
-                miller_indices[0][i] ** 2
-                + miller_indices[1][i] ** 2
-                + miller_indices[2][i] ** 2
-            )
-            for i, _ in enumerate(miller_indices[0])
-        ]
-        cubic_phase.sqrt_miller = sq_root
-        return sq_root
+                return IndeterminatePhase()
 
     @property
     def q_corr(self) -> list[float]:
