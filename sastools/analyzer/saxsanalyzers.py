@@ -33,18 +33,18 @@ class PrepareStandard:
             ValueError: If both standard and q_std_lit are provided.
             NotImplementedError: If not yet implemented SAXS standard is passed.
         """
-        self.standard = standard
-        self.q_std_lit = q_std_lit
+        self._standard = standard
+        self._q_std_lit = q_std_lit
 
-        if self.standard and self.q_std_lit:
+        if self._standard and self._q_std_lit:
             raise ValueError(
-                f"Both a standard = '{standard.name}' and a custom q_std_lit = '{q_std_lit}' were given. These arguments are mutually exclusive, please choose only one!"
+                f"Both a standard = '{self.standard.name}' and a custom q_std_lit = '{self.q_std_lit}' were given. These arguments are mutually exclusive, please choose only one!"
             )
-        elif self.standard == SAXSStandards.CHOLESTERYL_PALMITATE:
+        elif self._standard == SAXSStandards.CHOLESTERYL_PALMITATE:
             self.calculate_scattering_vector()
-        elif self.standard is None and self.q_std_lit:
+        elif self._standard is None and self._q_std_lit:
             pass
-        elif self.standard is None and self.q_std_lit is None:
+        elif self._standard is None and self._q_std_lit is None:
             pass
         else:
             raise NotImplementedError(
@@ -68,12 +68,12 @@ class PrepareStandard:
         Returns:
             list[float]: Scattering vector q_std_lit.
         """
-        if self.q_std_lit:
+        if self._q_std_lit:
             print(
-                f"INFO: q_std_lit = {self.q_std_lit} has already been provided or calculated. Passing method call."
+                f"INFO: q_std_lit = {self._q_std_lit} has already been provided or calculated. Passing method call."
             )
-            return self.q_std_lit
-        elif self.standard == SAXSStandards.CHOLESTERYL_PALMITATE:
+            return self._q_std_lit
+        elif self._standard == SAXSStandards.CHOLESTERYL_PALMITATE:
             d_std_lit = [5.249824535, 2.624912267, 1.749941512]
             # Reference: D. L. Dorset, Journal of Lipid Research 1987,
             # 28, 993-1005.
@@ -87,8 +87,8 @@ class PrepareStandard:
                     f"d_std_lit = {d_std_lit} cannot be an empty list!"
                 )
 
-        self.q_std_lit = [(2 * np.pi) / d for d in d_std_lit]
-        return self.q_std_lit
+        self._q_std_lit = [(2 * np.pi) / d for d in d_std_lit]
+        return self._q_std_lit
 
     def calculate_linear_regression(
         self, q_std_meas: list[float]
@@ -103,8 +103,18 @@ class PrepareStandard:
         Returns:
             tuple: Tuple of slope and intercept from linear regression.
         """
-        slope, intercept = np.polyfit(x=q_std_meas, y=self.q_std_lit, deg=1)
+        slope, intercept = np.polyfit(x=q_std_meas, y=self._q_std_lit, deg=1)
         return (slope, intercept)
+
+    @property
+    def standard(self) -> SAXSStandards:
+        """Get standard used for this preparation."""
+        return self._standard
+
+    @property
+    def q_std_lit(self) -> list[float]:
+        """Get lscattering vectors of standard from literature used."""
+        return self._q_std_lit
 
 
 class LLCAnalyzer:
@@ -115,27 +125,12 @@ class LLCAnalyzer:
         self._d = []
         self._d_ratio = []
 
-    @property
-    def q_corr(self) -> list[float]:
-        """Get calibrated scattering vectors."""
-        return self._q_corr
-
-    @property
-    def d(self) -> list[float]:
-        """Get lattice plane distances."""
-        return self._d
-
-    @property
-    def d_ratio(self) -> list[float]:
-        """Get lattice plane ratios"""
-        return self._d_ratio
-
-    def __calculate_lattice_plane_distances(self) -> None:
+    def _calculate_lattice_plane_distances(self) -> None:
         # Calculate and return the lattice planes `d` from list of
         # calibrated scattering vectors `q_corr`.
         self._d = [(2 * np.pi) / q for q in self.q_corr]
 
-    def __calculate_lattice_ratio(self) -> None:
+    def _calculate_lattice_ratio(self) -> None:
         # Calculate and return the lattice plane ratios `d_ratio` from
         # list of lattice planes `d`.
         self._d_ratio = [d / self.d[0] for d in self.d[1:]]
@@ -154,8 +149,8 @@ class LLCAnalyzer:
             intercept (float): Intercept of calculated linear regression from measured standard against literature values.
         """
         self._q_corr = [slope * q + intercept for q in q_meas]
-        self.__calculate_lattice_plane_distances()
-        self.__calculate_lattice_ratio()
+        self._calculate_lattice_plane_distances()
+        self._calculate_lattice_ratio()
 
     def determine_phase(self) -> LLCPhase:
         """Determine the LLC phase of the sample from `d_ratios` and
@@ -235,3 +230,18 @@ class LLCAnalyzer:
         ]
         cubic_phase.sqrt_miller = sq_root
         return sq_root
+
+    @property
+    def q_corr(self) -> list[float]:
+        """Get calibrated scattering vectors."""
+        return self._q_corr
+
+    @property
+    def d(self) -> list[float]:
+        """Get lattice plane distances."""
+        return self._d
+
+    @property
+    def d_ratio(self) -> list[float]:
+        """Get lattice plane ratios."""
+        return self._d_ratio

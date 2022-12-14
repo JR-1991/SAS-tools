@@ -24,11 +24,24 @@ class HexagonalPhase(LLCPhase):
     def __repr__(self) -> str:
         return "Hexagonal LLC Phase"
 
-    def __calculate_a_H1(self, d: float, h: int, k: int) -> float:
+    def _calculate_a_H1(self, d: float, h: int, k: int) -> float:
         # Calculate and return the lattice parameter for a given lattice
         # plane distance d, miller index h, and miller index k.
         a_H1 = d * np.sqrt((4 / 3) * ((h**2 + k**2 + (h * k))))
         return a_H1
+
+    def calculate_lattice_parameters(self, d_meas: list[float]) -> None:
+        """Calculate lattice parameters of hexagonal phase using a list
+        of measured lattice plane distances `d_meas`.
+
+        Args:
+            d_meas (list[float]): Measured lattice plane distances.
+        """
+        for i, j in enumerate(d_meas):
+            a_i = self._calculate_a_H1(
+                d_meas[i], self.miller_indices[0][i], self.miller_indices[1][i]
+            )
+            self.lattice_parameters.append(a_i)
 
     @property
     def phase(self) -> LLCPhases:
@@ -60,19 +73,6 @@ class HexagonalPhase(LLCPhase):
         )
         return self._phase_information
 
-    def calculate_lattice_parameters(self, d_meas: list[float]) -> None:
-        """Calculate lattice parameters of hexagonal phase using a list
-        of measured lattice plane distances `d_meas`.
-
-        Args:
-            d_meas (list[float]): Measured lattice plane distances.
-        """
-        for i, j in enumerate(d_meas):
-            a_i = self.__calculate_a_H1(
-                d_meas[i], self.miller_indices[0][i], self.miller_indices[1][i]
-            )
-            self.lattice_parameters.append(a_i)
-
 
 class CubicPhase(LLCPhase):
     """Container for properties of cubic LLC phases."""
@@ -94,11 +94,27 @@ class CubicPhase(LLCPhase):
     def __repr__(self) -> str:
         return f"Cubic ({self.phase.value}) LLC Phase"
 
-    def __calculate_a_V1(self, d: float, h: int, k: int, l: int) -> float:
+    def _calculate_a_V1(self, d: float, h: int, k: int, l: int) -> float:
         # Calculate and return the lattice parameter for a given lattice
         # plane distance d, miller index h, k, and l.
         a_V1 = d * (np.sqrt((h**2) + (k**2) + (l**2)))
         return a_V1
+
+    def calculate_lattice_parameters(self, d_meas: list[float]) -> None:
+        """Calculate lattice parameters of cubic phase using a list of
+        measured lattice plane distances `d_meas`.
+
+        Args:
+            d_meas (list[float]): Measured lattice plane distances.
+        """
+        for i, j in enumerate(d_meas):
+            a_i = self._calculate_a_V1(
+                d_meas[i],
+                self.miller_indices[0][i],
+                self.miller_indices[1][i],
+                self.miller_indices[2][i],
+            )
+            self._lattice_parameters.append(a_i)
 
     @property
     def phase(self) -> LLCPhases:
@@ -148,22 +164,6 @@ class CubicPhase(LLCPhase):
     def sqrt_miller(self, values: list[int]) -> None:
         self._sqrt_miller = values
 
-    def calculate_lattice_parameters(self, d_meas: list[float]) -> None:
-        """Calculate lattice parameters of cubic phase using a list of
-        measured lattice plane distances `d_meas`.
-
-        Args:
-            d_meas (list[float]): Measured lattice plane distances.
-        """
-        for i, j in enumerate(d_meas):
-            a_i = self.__calculate_a_V1(
-                d_meas[i],
-                self.miller_indices[0][i],
-                self.miller_indices[1][i],
-                self.miller_indices[2][i],
-            )
-            self._lattice_parameters.append(a_i)
-
 
 class LamellarPhase(LLCPhase):
     """Container for properties of lamellar LLC phases."""
@@ -177,6 +177,15 @@ class LamellarPhase(LLCPhase):
 
     def __repr__(self) -> str:
         return "Lamellar LLC Phase"
+
+    def calculate_lattice_parameters(self, d_meas: list[float]) -> None:
+        """Calculate lattice parameters of lamellar phase using a list
+        of measured lattice plane distances `d_meas`.
+
+        Args:
+            d_meas (list[float]): Measured lattice plane distances.
+        """
+        self._lattice_parameters.append[d_meas[0]]
 
     @property
     def phase(self) -> LLCPhases:
@@ -198,15 +207,6 @@ class LamellarPhase(LLCPhase):
         """Get lattice parameters of lamellar phase."""
         return self._lattice_parameters
 
-    def calculate_lattice_parameters(self, d_meas: list[float]) -> None:
-        """Calculate lattice parameters of lamellar phase using a list
-        of measured lattice plane distances `d_meas`.
-
-        Args:
-            d_meas (list[float]): Measured lattice plane distances.
-        """
-        self._lattice_parameters.append[d_meas[0]]
-
 
 class IndeterminatePhase(LLCPhase):
     """Container for properties of indeterminate LLC phases."""
@@ -220,6 +220,20 @@ class IndeterminatePhase(LLCPhase):
 
     def __repr__(self) -> str:
         return "Indeterminate LLC Phase"
+
+    def calculate_lattice_parameters(self, d_meas: list[float]) -> None:
+        """Do not use this method! Indeterminate phases have no lattice
+        parameters.
+
+        Args:
+            d_meas (list[float]): Measured lattice plane distances.
+
+        Raises:
+            NotImplementedError: If this method is called.
+        """
+        raise NotImplementedError(
+            f"No lattice parameter in indeterminate phases!"
+        )
 
     @property
     def phase(self) -> LLCPhases:
@@ -249,17 +263,3 @@ class IndeterminatePhase(LLCPhase):
             lattice_parameter="-",
         )
         return self._phase_information
-
-    def calculate_lattice_parameters(self, d_meas: list[float]) -> None:
-        """Do not use this method! Indeterminate phases have no lattice
-        parameters.
-
-        Args:
-            d_meas (list[float]): Measured lattice plane distances.
-
-        Raises:
-            NotImplementedError: If this method is called.
-        """
-        raise NotImplementedError(
-            f"No lattice parameter in indeterminate phases!"
-        )

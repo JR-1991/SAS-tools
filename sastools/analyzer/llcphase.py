@@ -7,6 +7,10 @@ from abc import ABC, abstractmethod
 class LLCPhase(ABC):
     """ABC defining the properties of an LLC Phase."""
 
+    @abstractmethod
+    def calculate_lattice_parameters(self, d_meas: list[float]):
+        ...
+
     @property
     @abstractmethod
     def phase(self) -> LLCPhases:
@@ -30,8 +34,4 @@ class LLCPhase(ABC):
     @property
     @abstractmethod
     def phase_information(self) -> dict:
-        ...
-
-    @abstractmethod
-    def calculate_lattice_parameters(self, d_meas: list[float]):
         ...
