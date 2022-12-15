@@ -1,16 +1,16 @@
 """Different space groups and their properties needed for analyzers."""
 
-from enums import LLCPhases, LLCSpaceGroups, LLCMillerIndices
-from llcphase import LLCPhase
-
 import numpy as np
+
+from sastools.analyzer.enums import LLCPhases, LLCSpaceGroups, LLCMillerIndices
+from sastools.analyzer.llcphase import LLCPhase
 
 
 class HexagonalPhase(LLCPhase):
     """Container for properties of hexagonal LLC phases."""
 
     def __init__(self) -> None:
-        self._phase = None
+        self._exact_phase = None
         self._space_group = LLCSpaceGroups.P6MM
         self._miller_indices = ()
         self._lattice_parameters = []
@@ -42,7 +42,7 @@ class HexagonalPhase(LLCPhase):
             raise NotImplementedError(
                 f"Chosen LLC phase '{phase}' is not (yet) supported."
             )
-        self._phase = phase
+        self._exact_phase = phase
         for i, j in enumerate(d_meas):
             a_i = self._calculate_a_H1(
                 d_meas[i], self.miller_indices[0][i], self.miller_indices[1][i]
@@ -50,13 +50,13 @@ class HexagonalPhase(LLCPhase):
             self.lattice_parameters.append(a_i)
 
     @property
-    def phase(self) -> LLCPhases:
+    def exact_phase(self) -> LLCPhases:
         """Get hexagonal phase."""
-        return self._phase
+        return self._exact_phase
 
-    @phase.setter
-    def phase(self, phase: LLCPhases) -> None:
-        self._phase = phase
+    @exact_phase.setter
+    def exact_phase(self, phase: LLCPhases) -> None:
+        self._exact_phase = phase
 
     @property
     def space_group(self) -> LLCSpaceGroups:
@@ -78,7 +78,7 @@ class HexagonalPhase(LLCPhase):
     def phase_information(self) -> dict:
         """Get full phase information of hexagonal phase."""
         self._phase_information = dict(
-            phase=self.phase.value,
+            phase=self.exact_phase.value,
             lattice_parameter=np.mean(self.lattice_parameters),
         )
         return self._phase_information
@@ -88,7 +88,7 @@ class CubicPhase(LLCPhase):
     """Container for properties of cubic LLC phases."""
 
     def __init__(self) -> None:
-        self._phase = None
+        self._exact_phase = None
         self._space_group = None
         self._miller_indices = ()
         self._lattice_parameters = []
@@ -126,7 +126,7 @@ class CubicPhase(LLCPhase):
             raise NotImplementedError(
                 f"Chosen LLC phase '{phase}' is not (yet) supported."
             )
-        self._phase = phase
+        self._exact_phase = phase
         self._space_group = space_group
         for i, j in enumerate(d_meas):
             a_i = self._calculate_a_V1(
@@ -162,13 +162,13 @@ class CubicPhase(LLCPhase):
         ]
 
     @property
-    def phase(self) -> LLCPhases:
+    def exact_phase(self) -> LLCPhases:
         """Get cubic phase."""
-        return self._phase
+        return self._exact_phase
 
-    @phase.setter
-    def phase(self, phase: LLCPhases) -> None:
-        self._phase = phase
+    @exact_phase.setter
+    def exact_phase(self, phase: LLCPhases) -> None:
+        self._exact_phase = phase
 
     @property
     def space_group(self) -> LLCSpaceGroups:
@@ -196,7 +196,7 @@ class CubicPhase(LLCPhase):
     def phase_information(self) -> dict:
         """Get full phase information of cubic phase."""
         self._phase_information = dict(
-            phase=self.phase.value,
+            phase=self.exact_phase.value,
             lattice_parameter=np.mean(self.lattice_parameters),
         )
         return self._phase_information
@@ -216,7 +216,7 @@ class LamellarPhase(LLCPhase):
     """Container for properties of lamellar LLC phases."""
 
     def __init__(self) -> None:
-        self._phase = None
+        self._exact_phase = None
         self._space_group = None
         self._miller_indices = None
         self._lattice_parameters = []
@@ -242,17 +242,17 @@ class LamellarPhase(LLCPhase):
             raise NotImplementedError(
                 f"Chosen LLC phase '{phase}' is not (yet) supported."
             )
-        self._phase = phase
+        self._exact_phase = phase
         self._lattice_parameters.append(d_meas[0])
 
     @property
-    def phase(self) -> LLCPhases:
+    def exact_phase(self) -> LLCPhases:
         """Get lamellar phase."""
-        return self._phase
+        return self._exact_phase
 
-    @phase.setter
-    def phase(self, phase: LLCPhases) -> None:
-        self._phase = phase
+    @exact_phase.setter
+    def exact_phase(self, phase: LLCPhases) -> None:
+        self._exact_phase = phase
 
     @property
     def space_group(self) -> None:
@@ -273,7 +273,7 @@ class LamellarPhase(LLCPhase):
     def phase_information(self) -> dict:
         """Get full phase information of lamellar phase."""
         self._phase_information = dict(
-            phase=self.phase.value,
+            phase=self.exact_phase.value,
             lattice_parameter=self.lattice_parameters[0],
         )
         return self._phase_information
@@ -283,7 +283,7 @@ class IndeterminatePhase(LLCPhase):
     """Container for properties of indeterminate LLC phases."""
 
     def __init__(self) -> None:
-        self._phase = LLCPhases.INDETERMINATE
+        self._exact_phase = LLCPhases.INDETERMINATE
         self._space_group = None
         self._miller_indices = None
         self._lattice_parameters = None
@@ -310,9 +310,9 @@ class IndeterminatePhase(LLCPhase):
         )
 
     @property
-    def phase(self) -> LLCPhases:
+    def exact_phase(self) -> LLCPhases:
         """Get indeterminate phase."""
-        return self._phase
+        return self._exact_phase
 
     @property
     def space_group(self) -> None:
@@ -333,7 +333,7 @@ class IndeterminatePhase(LLCPhase):
     def phase_information(self) -> dict:
         """Get full phase information of indeterminate phase."""
         self._phase_information = dict(
-            phase=self.phase.value,
+            phase=self.exact_phase.value,
             lattice_parameter="-",
         )
         return self._phase_information
