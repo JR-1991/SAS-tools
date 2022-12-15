@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 
-from analyzer.enums import LLCPhases, LLCSpaceGroups
+from sastools.analyzer.enums import LLCPhases, LLCSpaceGroups
 
 
 class LLCPhase(ABC):
@@ -14,7 +14,7 @@ class LLCPhase(ABC):
 
     @property
     @abstractmethod
-    def phase(self) -> LLCPhases:
+    def exact_phase(self) -> LLCPhases:
         ...
 
     @property

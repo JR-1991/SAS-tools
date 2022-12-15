@@ -2,9 +2,9 @@
 
 import numpy as np
 
-from analyzer.enums import SAXSStandards
-from analyzer.llcphase import LLCPhase
-from analyzer.llcphases import (
+from sastools.analyzer.enums import SAXSStandards
+from sastools.analyzer.llcphase import LLCPhase
+from sastools.analyzer.llcphases import (
     CubicPhase,
     HexagonalPhase,
     IndeterminatePhase,
@@ -122,13 +122,13 @@ class LLCAnalyzer:
 
     def __init__(self) -> None:
         self._q_corr = []
-        self._d = []
+        self._d_measured = []
         self._d_ratio = []
 
     def _calculate_lattice_plane_distances(self) -> None:
         # Calculate and return the lattice planes `d` from list of
         # calibrated scattering vectors `q_corr`.
-        self._d = [(2 * np.pi) / q for q in self.q_corr]
+        self._d_measured = [(2 * np.pi) / q for q in self.q_corr]
 
     def calibrate_data(
         self, slope: float, q_meas: list[float], intercept: float
@@ -150,7 +150,7 @@ class LLCAnalyzer:
         list of lattice planes `d`.
         """
         self._calculate_lattice_plane_distances()
-        self._d_ratio = [d / self.d[0] for d in self.d[1:]]
+        self._d_ratio = [d / self.d_measured[0] for d in self.d_measured[1:]]
 
     def determine_phase(self) -> LLCPhase:
         """Determine the LLC phase of the sample from `d_ratios` and
@@ -189,9 +189,9 @@ class LLCAnalyzer:
         return self._q_corr
 
     @property
-    def d(self) -> list[float]:
+    def d_measured(self) -> list[float]:
         """Get lattice plane distances."""
-        return self._d
+        return self._d_measured
 
     @property
     def d_ratio(self) -> list[float]:
