@@ -1,18 +1,31 @@
-import random
 import json
+import random
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 from lmfit import models
-from lmfit.model import save_modelresult, load_modelresult, save_model
+from lmfit.model import save_modelresult, load_modelresult
 from scipy import signal
 
 class Analyzer():
 
+    def __init__(self, experimental_data : pd.DataFrame):
+        """ Initializing the x and corresponding y  values  for the fit"""
 
-    def put_data_into_dict(self):
+        self.exp_data = experimental_data
+        self.x = self.exp_data.iloc[:,0].values.tolist()
+        self.y = self.exp_data.iloc[:,1].values.tolist()
 
+
+    def pack_data_into_dict(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
         spec_dict = {
             'data': {
                 'x': self.x,
@@ -22,9 +35,41 @@ class Analyzer():
         return spec_dict
 
 
-    def create_specifications_manually(self):
+    def plot_data(self):
+        exp_data_plot = sns.lineplot(x = 'scattering_vector', y = 'counts_per_area', data=self.exp_data)
+        exp_data_fig = exp_data_plot.get_figure()
+        exp_data_fig.savefig('exp_data_plot.png', facecolor='white', transparent=False, dpi=600)
 
-        spec_dict = self.put_data_into_dict()
+
+    def find_peaks_cwt(self, peak_widths=(20,), cutoff_amplitude=None):
+
+        self.c = cutoff_amplitude
+        self.w = peak_widths
+        peak_indices = signal.find_peaks_cwt(self.y, self.w)
+        peak_fig, ax = plt.subplots()
+        ax.plot(self.x, self.y)
+        for i in peak_indices:
+            ax.axvline(self.x[i], c='black', linestyle='dotted')
+        peak_fig.savefig('found_peaks.png', facecolor='white', transparent=False, dpi = 600)
+        x_val_peak = [self.x[peak_index] for peak_index in peak_indices]
+        y_val_peak = [self.y[peak_index] for peak_index in peak_indices]
+        self.peak_dict = {}
+        for i in range(len(x_val_peak)):
+            self.peak_dict[x_val_peak[i]] = y_val_peak[i]
+        if self.c != None:
+            self.peak_dict = {key:val for key, val in self.peak_dict.items() if val >= self.c}
+        print('number of found peaks:', len(self.peak_dict))
+        j=1
+        for key, value in self.peak_dict.items():
+            print('peak number:', j, 'x:', key, 'y:', value)
+            j=j+1
+
+
+    def set_specifications_manually(self, number_of_models, model_specifications):
+        
+        self.n_models= number_of_models
+        self.models = model_specifications
+        spec_dict = self.pack_data_into_dict()
         models_list = []
         for model in self.models:
             model_dict = {
@@ -48,31 +93,25 @@ class Analyzer():
             outfile.write(json_models_dict)
 
 
-    def create_specifications_automatically(self, tolerance, peak_widths=(20,)):
+    def set_specifications_automatically(self, tolerance, model_type):
 
+        self.model_type = model_type
         t = tolerance
-        w = peak_widths
-        peak_indices = signal.find_peaks_cwt(self.y, w)
         x_range = np.max(self.x) - np.min(self.x)
-        x_val_peak = [self.x[peak_index] for peak_index in peak_indices]
-        y_val_peak = [self.y[peak_index] for peak_index in peak_indices]
-        peak_dict = {}
-        for i in range(len(x_val_peak)):
-            peak_dict[x_val_peak[i]] = y_val_peak[i]
-        spec_dict =self.put_data_into_dict()
+        spec_dict =self.pack_data_into_dict()
         models_list = []
-        for x_val, y_val in zip(x_val_peak, y_val_peak):
+        for x, y in self.peak_dict.items():
             model_dict = {
                 'type': self.model_type,
                 'params': {
-                    'center': x_val,
-                    'height': y_val,
-                    'sigma': x_range / len(x_val_peak) * np.min(w)
+                    'center': x,
+                    'height': y,
+                    'sigma': x_range / len(self.peak_dict) * np.min(self.w)
                 },
                 'help': {
                     'center': {
-                        'min': (x_val-t),
-                        'max': (x_val+t)
+                        'min': (x-t),
+                        'max': (x+t)
                     }
                 }
             }
@@ -121,49 +160,19 @@ class Analyzer():
         return composite_model, params
 
 
-    def initialize(
-        self, experimental_data : pd.DataFrame,
-        only_load_model_result_and_plot : bool = False,
-        start_from_json_file : bool = False,
-        automatic_peak_finding : bool = True,
-        **kwargs
-        ):
-        if only_load_model_result_and_plot == False:
-            if start_from_json_file == False:
-                self.exp_data = experimental_data
-                self.x = self.exp_data.iloc[:,0].values.tolist()
-                self.y = self.exp_data.iloc[:,0].values.tolist()
+    def fit(self):
 
-                # for manual set specifications only
-                self.n_models= kwargs['number_of_models']
-                self.models = kwargs['model_specifications']
+        with open('models_dict.json', 'r') as outfile:
+            speci = json.load(outfile)
+        model, params = self.generate_model(speci)
+        model_result = model.fit(speci['data']['y'], params, x = speci['data']['x'])
+        save_modelresult(model_result, 'model_result.sav')
 
-                # for automatically generated specifications only
-                if kwargs.get('peak_widths') == None:
-                    peak_widths = (2.5,)
-                else:
-                    peak_widths=kwargs['peak_widths']
-                if kwargs.get('tolerance') == None:
-                    tolerance = 0.5
-                else:
-                    tolerance=kwargs['tolerance']
-                if automatic_peak_finding == True:        
-                    self.model_type = kwargs['model_type']
-                if automatic_peak_finding == False:
-                    self.create_specifications_manually()
-                else :
-                    self.create_specifications_automatically(tolerance, peak_widths)
-            else:
-                pass
-            with open('models_dict.json', 'r') as outfile:
-                speci = json.load(outfile)
-            model, params = self.generate_model(speci)
-            save_model(model, 'model.sav')
-            model_result = model.fit(speci['data']['y'], params, x = speci['data']['x'])
-            save_modelresult(model_result, 'model_result.sav')
-        else:
-            pass
+
+    def plot_fit(self):
+
         model_result = load_modelresult('model_result.sav')
         print(model_result.fit_report())
-        fig = model_result.plot(data_kws={'markersize': 1})
+        fig = model_result.plot(data_kws={'markersize': 0.5})
         fig.axes[0].set_title('')
+        fig.savefig('model_result.png', facecolor = 'white', dpi=600)
