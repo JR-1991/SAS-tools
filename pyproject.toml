@@ -1,9 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "versioneer[toml]==0.28"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "sastools"
+version = "0.0"
 description = "SAS-tools contains useful functions and classes for working with SAS data."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -29,6 +30,15 @@ dependencies = [
     "pandas",
     "pyaniml"
 ]
+
 [project.urls]
 "Homepage" = "https://github.com/FAIRChemistry"
 "Repository" = "https://github.com/FAIRChemistry/SAS-tools"
+
+[tool.versioneer]
+VCS = "git"
+style = "pep440"
+versionfile_source = "sastools/_version.py"
+versionfile_build = "sastools/_version.py"
+tag_prefix = ""
+parentdir_prefix = "sastools-"
