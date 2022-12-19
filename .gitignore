@@ -137,6 +137,6 @@ dmypy.json
 # test notebook
 test_nb.ipynb
 
-# ignore all firles with .
+# ignore all files with .
 .*/
 
