@@ -25,11 +25,6 @@ class Analyzer():
         self.path_fitting_data = path_fitting_data
 
     def pack_data_into_dict(self):
-        """_summary_
-
-        Returns:
-            _type_: _description_
-        """
         spec_dict = {
             'data': {
                 'x': self.x,
