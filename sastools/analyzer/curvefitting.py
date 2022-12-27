@@ -9,15 +9,20 @@ import seaborn as sns
 from lmfit import models
 from lmfit.model import save_modelresult, load_modelresult
 from scipy import signal
+from pathlib import Path
+
 
 class Analyzer():
 
-    def __init__(self, experimental_data : pd.DataFrame):
+    def __init__(self, experimental_data : pd.DataFrame, file_name : str, path_plots : Path, path_fitting_data : Path):
         """ Initializing the x and y  values  for the fit"""
 
         self.exp_data = experimental_data
         self.x = self.exp_data.iloc[:,0].values.tolist()
         self.y = self.exp_data.iloc[:,1].values.tolist()
+        self.file_name = file_name
+        self.path_plots = path_plots
+        self.path_fitting_data = path_fitting_data
 
     def pack_data_into_dict(self):
         """_summary_
@@ -36,7 +41,7 @@ class Analyzer():
     def plot_data(self):
         exp_data_plot = sns.lineplot(x = 'scattering_vector', y = 'counts_per_area', data=self.exp_data)
         exp_data_fig = exp_data_plot.get_figure()
-        exp_data_fig.savefig('exp_data_plot.png', facecolor='white', transparent=False, dpi=600)
+        exp_data_fig.savefig(self.path_plots / f'exp_data_plot_{self.file_name}.png', facecolor='white', transparent=False, dpi=600)
 
     def find_peaks_cwt(self, peak_widths=(20,), cutoff_amplitude=None):
         self.c = cutoff_amplitude
@@ -59,7 +64,7 @@ class Analyzer():
         ax.plot(self.x, self.y)
         for i in self.peak_dict:
             ax.axvline(i, c='black', linestyle='dotted')
-        peak_fig.savefig('found_peaks.png', facecolor='white', transparent=False, dpi = 600)
+        peak_fig.savefig(self.path_plots / f'found_peaks_{self.file_name}.png', facecolor='white', transparent=False, dpi = 600)
 
     def set_specifications_manually(self, number_of_models, model_specifications):
         self.n_models= number_of_models
@@ -84,7 +89,7 @@ class Analyzer():
             models_list.append(model_dict)
         spec_dict.update({'models': models_list})
         json_models_dict = json.dumps(spec_dict, indent=4)
-        with open("models_dict.json", "w") as outfile:
+        with open(self.path_fitting_data / f'models_dict_{self.file_name}.json','w') as outfile:
             outfile.write(json_models_dict)
 
     def set_specifications_automatically(self, tolerance, model_type):
@@ -111,7 +116,7 @@ class Analyzer():
             models_list.append(model_dict)
         spec_dict.update({'models':models_list})
         json_models_dict = json.dumps(spec_dict, indent=4)
-        with open("models_dict.json", "w") as outfile:
+        with open(self.path_fitting_data / f'models_dict_{self.file_name}.json', 'w') as outfile:
             outfile.write(json_models_dict)
 
     def generate_model(self, speci):
@@ -151,25 +156,26 @@ class Analyzer():
         return composite_model, params
 
     def fit(self):
-        with open('models_dict.json', 'r') as outfile:
+        with open(self.path_fitting_data / f'models_dict_{self.file_name}.json', 'r') as outfile:
             speci = json.load(outfile)
         model, params = self.generate_model(speci)
         model_result = model.fit(speci['data']['y'], params, x = speci['data']['x'])
-        save_modelresult(model_result, 'model_result.sav')
+        save_modelresult(model_result, self.path_fitting_data / f'model_result_{self.file_name}.sav')
 
     def list_of_model_centers(self):
-        model_result = load_modelresult('model_result.sav')
+        model_result = load_modelresult(self.path_fitting_data / f'model_result_{self.file_name}.sav')
         list_xc= []
         for i in range(self.n_peaks):
             list_xc.append(model_result.best_values[f'model{i}_center'])
-        with open('list_xc.txt', 'w') as f:
+        with open(self.path_fitting_data / f'list_xc_{self.file_name}.txt', 'w') as f:
             for line in list_xc:
                 f.write(f"{line}\n")
 
     def plot_fit(self):
-        model_result = load_modelresult('model_result.sav')
+        model_result = load_modelresult(self.path_fitting_data / f'model_result_{self.file_name}.sav')
         # print(model_result.fit_report())
         fig = model_result.plot(data_kws={'markersize': 0.5})
         fig.axes[0].set_title('')
-        fig.savefig('model_result.png', facecolor = 'white', dpi=600)
-        print(model_result.best_values)
+        fig.savefig(self.path_plots / f'model_result_{self.file_name}.png', facecolor = 'white', dpi=600)
+        for key, value in model_result.best_values.items():
+            print(key, ':', value)
