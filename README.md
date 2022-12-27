@@ -11,7 +11,7 @@ SAS-tools contains useful functions and classes for reading, transforming, worki
 Get started with SAS-tools by installing the package from PyPI:
 
 ```bash
-python -m pip install sastools
+python -m pip install SAS-tools
 ```
 
 Alternatively, build SAS-tools from source:
