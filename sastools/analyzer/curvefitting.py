@@ -258,7 +258,7 @@ class CurveFitting:
             for line in list_peak_center:
                 f.write(f"{line}\n")
 
-    def plot_fittung_result(self):
+    def plot_fitting_result(self):
         """Loading the `model_result` and creating a plot using the `plot` method of the `model_result` class, which shows the fit along with the corresponding
         residual values. Prints the positions of the individual fitted models along with their heights.
         """
