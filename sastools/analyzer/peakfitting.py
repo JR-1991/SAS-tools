@@ -12,11 +12,9 @@ from scipy import signal
 from pathlib import Path
 
 
-class Analyzer():
+class PeakFitting():
 
     def __init__(self, experimental_data : pd.DataFrame, file_name : str, path_plots : Path, path_fitting_data : Path):
-        """ Initializing the x and y  values  for the fit"""
-
         self.exp_data = experimental_data
         self.x = self.exp_data.iloc[:,0].values.tolist()
         self.y = self.exp_data.iloc[:,1].values.tolist()
@@ -24,21 +22,36 @@ class Analyzer():
         self.path_plots = path_plots
         self.path_fitting_data = path_fitting_data
 
-    def pack_data_into_dict(self):
-        spec_dict = {
+    def pack_data_into_dict(self) -> dict:
+        """Stores the data in a dictionary
+
+        Returns:
+            data dict: Nested dictionary containing the data to be fitted as key value pairs. To be extended by the methods that set
+            the specifications.
+        """
+        data_dict = {
             'data': {
                 'x': self.x,
                 'y': self.y
             }
         }
-        return spec_dict
+        return data_dict
 
     def plot_data(self):
+        """Plot the data and save the plot
+        """
         exp_data_plot = sns.lineplot(x = 'scattering_vector', y = 'counts_per_area', data=self.exp_data)
         exp_data_fig = exp_data_plot.get_figure()
         exp_data_fig.savefig(self.path_plots / f'exp_data_plot_{self.file_name}.png', facecolor='white', transparent=False, dpi=600)
 
-    def find_peaks_cwt(self, peak_widths=(20,), cutoff_amplitude=None):
+    def find_peaks_cwt(self, peak_widths: tuple=(20,), cutoff_amplitude: float=None):
+        """Find peaks using the `find_peaks_cwt` method from signal. Prints number of found peaks.
+        Figure with positions of found peaks is plotted and saved.
+
+        Args:
+            peak_widths (tuple, optional):  Expected peak widths for the algorithm to find. Defaults to (20,).
+            cutoff_amplitude (float, optional): Cutoff below which peaks found are discarded. Defaults to None.
+        """
         self.c = cutoff_amplitude
         self.w = peak_widths
         peak_indices = signal.find_peaks_cwt(self.y, self.w)
@@ -61,7 +74,17 @@ class Analyzer():
             ax.axvline(i, c='black', linestyle='dotted')
         peak_fig.savefig(self.path_plots / f'found_peaks_{self.file_name}.png', facecolor='white', transparent=False, dpi = 600)
 
-    def set_specifications_manually(self, number_of_models, model_specifications):
+    def set_specifications_manually(self, number_of_models: int, model_specifications: dict):
+        """Manually sets the specifications for the individual model used for the fitting procedure. Stores the generated
+        specifications in a json file.
+
+        Args:
+            number_of_models (int): Number of models to use for the fitting procedure
+            model_specifications (dict): Fitting parameters for the models, each consisting of the initial values 'type', 'center',
+            'height' and 'sigma' of the individual models as well as corresponding 'help' parameter which confines the position of
+            the model center during the fitting procedure.
+
+        """
         self.n_models= number_of_models
         self.models = model_specifications
         spec_dict = self.pack_data_into_dict()
@@ -87,7 +110,14 @@ class Analyzer():
         with open(self.path_fitting_data / f'models_dict_{self.file_name}.json','w') as outfile:
             outfile.write(json_models_dict)
 
-    def set_specifications_automatically(self, tolerance, model_type):
+    def set_specifications_automatically(self, tolerance: float, model_type: str):
+        """Automatically sets the specifications for the individual model used for the fitting procedure. Stores the generated
+        specifications in a json file.
+
+        Args:
+            tolerance (float): Tolerance within which the center positions of the models may deviate during the fitting procedure.
+            model_type (str): Model type to be used for the fitting procedure.
+        """
         self.model_type = model_type
         t = tolerance
         x_range = np.max(self.x) - np.min(self.x)
@@ -114,7 +144,19 @@ class Analyzer():
         with open(self.path_fitting_data / f'models_dict_{self.file_name}.json', 'w') as outfile:
             outfile.write(json_models_dict)
 
-    def generate_model(self, speci):
+    def generate_model(self, speci: dict):
+        """Generates a composite model and corresponding parameters based on the provided specifications using the `model` class
+        of the python library `lmfit`.
+
+        Args:
+            dict: Contains all the initial specification for the fitting procedure.
+
+        Raises:
+            NotImplemented: If a provided model type is not implemented in the algorithm.
+
+        Returns:
+            tuple: Generated compostite model and corresponding fitting parameters.
+        """
         composite_model = None
         params = None
         x_min = np.min(speci['data']['x'])
@@ -151,22 +193,30 @@ class Analyzer():
         return composite_model, params
 
     def fit(self):
+        """Executes the fitting algorithm starting from the generated model and the corresponding parameters. Saves the output as
+        `model_result`, which is as a class of `lmfit`.
+        """
         with open(self.path_fitting_data / f'models_dict_{self.file_name}.json', 'r') as outfile:
             speci = json.load(outfile)
         model, params = self.generate_model(speci)
         model_result = model.fit(speci['data']['y'], params, x = speci['data']['x'])
         save_modelresult(model_result, self.path_fitting_data / f'model_result_{self.file_name}.sav')
 
-    def list_of_model_centers(self):
+    def save_list_of_peak_centers(self):
+        """Stores the determined peak centers in a text file.
+        """
         model_result = load_modelresult(self.path_fitting_data / f'model_result_{self.file_name}.sav')
-        list_xc= []
+        list_peak_center= []
         for i in range(self.n_peaks):
-            list_xc.append(model_result.best_values[f'model{i}_center'])
+            list_peak_center.append(model_result.best_values[f'model{i}_center'])
         with open(self.path_fitting_data / f'list_xc_{self.file_name}.txt', 'w') as f:
-            for line in list_xc:
+            for line in list_peak_center:
                 f.write(f"{line}\n")
 
     def plot_fit(self):
+        """Loading the `model_result` and creating a plot using the `plot` method of the `model_result` class, which shows the fit along with the corresponding
+        residual values. Prints the positions of the individual fitted models along with their heights.
+        """
         model_result = load_modelresult(self.path_fitting_data / f'model_result_{self.file_name}.sav')
         # print(model_result.fit_report())
         fig = model_result.plot(data_kws={'markersize': 0.5})
