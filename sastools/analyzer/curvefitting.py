@@ -12,9 +12,18 @@ from scipy import signal
 from pathlib import Path
 
 
-class PeakFitting():
-
+class CurveFitting():
+    """tool for curve fitting 
+    """
     def __init__(self, experimental_data : pd.DataFrame, file_name : str, path_plots : Path, path_fitting_data : Path):
+        """Initialize parameters for the curve fitting class passing experimental data 
+
+        Args:
+            experimental_data (pd.DataFrame): _description_
+            file_name (str): _description_
+            path_plots (Path): _description_
+            path_fitting_data (Path): _description_
+        """
         self.exp_data = experimental_data
         self.x = self.exp_data.iloc[:,0].values.tolist()
         self.y = self.exp_data.iloc[:,1].values.tolist()
@@ -22,13 +31,8 @@ class PeakFitting():
         self.path_plots = path_plots
         self.path_fitting_data = path_fitting_data
 
-    def pack_data_into_dict(self) -> dict:
-        """Stores the data in a dictionary
-
-        Returns:
-            data dict: Nested dictionary containing the data to be fitted as key value pairs. To be extended by the methods that set
-            the specifications.
-        """
+    def _pack_data_into_dict(self) -> dict:
+        # Stores the data in a dictionary
         data_dict = {
             'data': {
                 'x': self.x,
@@ -90,7 +94,7 @@ class PeakFitting():
         """
         self.n_models= number_of_models
         self.models = model_specifications
-        spec_dict = self.pack_data_into_dict()
+        spec_dict = self._pack_data_into_dict()
         models_list = []
         for model in self.models:
             model_dict = {
@@ -124,7 +128,7 @@ class PeakFitting():
         self.model_type = model_type
         t = tolerance
         x_range = np.max(self.x) - np.min(self.x)
-        spec_dict =self.pack_data_into_dict()
+        spec_dict =self._pack_data_into_dict()
         models_list = []
         for x, y in self.peak_dict.items():
             model_dict = {
@@ -216,7 +220,7 @@ class PeakFitting():
             for line in list_peak_center:
                 f.write(f"{line}\n")
 
-    def plot_fit(self):
+    def plot_fittung_result(self):
         """Loading the `model_result` and creating a plot using the `plot` method of the `model_result` class, which shows the fit along with the corresponding
         residual values. Prints the positions of the individual fitted models along with their heights.
         """

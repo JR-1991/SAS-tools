@@ -1,4 +1,4 @@
-from sastools.analyzer.peakfitting import PeakFitting
+from sastools.analyzer.curvefitting import PeakFitting
 from sastools.analyzer.enums import (
     SAXSStandards,
     LLCPhases,
