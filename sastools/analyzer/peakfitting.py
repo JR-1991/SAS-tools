@@ -37,7 +37,7 @@ class PeakFitting():
         }
         return data_dict
 
-    def plot_data(self):
+    def plot_raw_data(self):
         """Plot the data and save the plot
         """
         exp_data_plot = sns.lineplot(x = 'scattering_vector', y = 'counts_per_area', data=self.exp_data)
@@ -68,6 +68,9 @@ class PeakFitting():
         for key, value in self.peak_dict.items():
             print('peak number:', j, 'x:', key, 'y:', value)
             j=j+1
+        
+    def plot_found_peak(self):
+        """Plot peaks found and save the plot"""
         peak_fig, ax = plt.subplots()
         ax.plot(self.x, self.y)
         for i in self.peak_dict:
