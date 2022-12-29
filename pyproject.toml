@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "versioneer[toml]==0.28"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sastools"
+name = "SAS-tools"
 version = "0.0"
 description = "SAS-tools contains useful functions and classes for working with SAS data."
 readme = "README.md"
@@ -20,15 +20,21 @@ maintainers = [
 ]
 keywords = ["RDM", "SAS", "SAXS"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
     "Topic :: Scientific/Engineering :: Chemistry"
 ]
 dependencies = [
+    "lmfit",
     "lxml",
+    "matplotlib",
     "numpy",
     "pandas",
-    "pyaniml"
+    "pyaniml",
+    "seaborn",
+    "scipy",
 ]
 
 [project.urls]

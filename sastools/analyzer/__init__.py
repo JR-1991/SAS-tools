@@ -1,4 +1,4 @@
-from sastools.analyzer.curvefitting import Analyzer
+from sastools.analyzer.curvefitting import CurveFitting
 from sastools.analyzer.enums import (
     SAXSStandards,
     LLCPhases,

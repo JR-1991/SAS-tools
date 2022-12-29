@@ -30,4 +30,4 @@ class LLCMillerIndices(Enum):
     """Different miller indices relevant for LLC phases."""
 
     P6MM = ([1, 1, 2, 2, 3], [0, 1, 0, 1, 0], [0, 0, 0, 0, 0])
-    IA3D = ([1, 1, 2, 2, 2], [0, 1, 0, 1, 2], [0, 1, 0, 1, 2])
+    IA3D = ([2, 2, 3, 3, 6], [1, 2, 1, 2, 1], [1, 0, 0, 1, 1])
