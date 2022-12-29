@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AnIML>
+  <SampleSet/>
+  <ExperimentStepSet>
+    <ExperimentStep name="test data" experimentStepID="experiment0">
+      <Result>
+        <Category name="test measurements">
+          <SeriesSet name="test method">
+            <Series name="x" seriesID="x0__" SeriesType="Float32" dependency="dependent" plotScale="linear">
+              <IndividualValueSet>
+                <F>0.0</F>
+                <F>1.0</F>
+                <F>2.0</F>
+                <F>3.0</F>
+                <F>4.0</F>
+                <F>5.0</F>
+                <F>6.0</F>
+                <F>7.0</F>
+              </IndividualValueSet>
+              <Unit label="test" quantity="test">
+                <SIUnit factor="1" exponent="1" offset="0.0">m</SIUnit>
+              </Unit>
+            </Series>
+            <Series name="y" seriesID="y0__" SeriesType="Float32" dependency="dependent" plotScale="linear">
+              <IndividualValueSet>
+                <F>0.0</F>
+                <F>1.0</F>
+                <F>1.0</F>
+                <F>2.0</F>
+                <F>3.0</F>
+                <F>5.0</F>
+                <F>8.0</F>
+              </IndividualValueSet>
+              <Unit label="test" quantity="test">
+                <SIUnit factor="1" exponent="1" offset="0.0">m</SIUnit>
+              </Unit>
+            </Series>
+          </SeriesSet>
+        </Category>
+        <Category name="test analyses">
+          <Category name="test parameters">
+            <Parameter name="parameter0" parameterType="String">indeterminate</Parameter>
+            <Parameter name="parameter1" parameterType="Float32">42.0</Parameter>
+          </Category>
+        </Category>
+      </Result>
+    </ExperimentStep>
+  </ExperimentStepSet>
+  <AuditTrailEntrySet/>
+  <SignatureSet/>
+</AnIML>

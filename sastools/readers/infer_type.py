@@ -17,17 +17,18 @@ def infer_type(var_to_infer: Any) -> str:
     Returns:
         str: AnIML type as specified in AnIML core schema.
     """
-    if isinstance(var_to_infer, str):
+    if (var_to_infer == True) or (var_to_infer == False):
+        if isinstance(var_to_infer, bool):
+            return "Boolean"
+    elif isinstance(var_to_infer, str):
         return "String"
-    elif isinstance(var_to_infer, numpy.int32):
+    elif numpy.issubdtype(type(var_to_infer), numpy.int32):
         return "Int32"
-    elif isinstance(var_to_infer, (int or numpy.int64)):
+    elif numpy.issubdtype(type(var_to_infer), numpy.integer):
         return "Int64"
-    elif isinstance(var_to_infer, numpy.float32):
+    elif numpy.issubdtype(type(var_to_infer), numpy.float32):
         return "Float32"
-    elif isinstance(var_to_infer, (float or numpy.float64)):
+    elif numpy.issubdtype(type(var_to_infer), numpy.floating):
         return "Float64"
-    elif isinstance(var_to_infer, bool):
-        return "Boolean"
     else:
         raise ValueError(f"{type(var_to_infer)} not a valid type.")
