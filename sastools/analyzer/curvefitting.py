@@ -268,11 +268,10 @@ class CurveFitting:
                 f.write(f"{line}\n")
 
     def plot_fitting_result(self) -> None:
-        """Loading the `model_result` and creating a plot using the
-        `plot` method of the `model_result` class, which shows the fit
-        along with the corresponding residual values. Prints the
-        positions of the individual fitted models along with their
-        heights.
+        """Load the `model_result` and creating a plot using the `plot`
+        method of the `model_result` class, which shows the fit along
+        with the corresponding residual values. Prints the positions of
+        the individual fitted models along with their heights.
         """
         model_result = load_modelresult(
             self.path_fitting_data / f"model_result_{self.file_name}.sav"
