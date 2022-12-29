@@ -20,15 +20,19 @@ maintainers = [
 ]
 keywords = ["RDM", "SAS", "SAXS"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3",
     "Topic :: Scientific/Engineering :: Chemistry"
 ]
 dependencies = [
+    "lmfit",
     "lxml",
+    "matplotlib",
     "numpy",
     "pandas",
-    "pyaniml"
+    "pyaniml",
+    "seaborn",
+    "scipy",
 ]
 
 [project.urls]

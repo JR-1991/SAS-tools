@@ -1,5 +1,11 @@
+"""Implementation of curve fitting for SAS experiments using Gaussian, 
+Lorentzian, and Voigt models.
+"""
+
 import json
 import random
+
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -9,11 +15,10 @@ import seaborn as sns
 from lmfit import models
 from lmfit.model import save_modelresult, load_modelresult
 from scipy import signal
-from pathlib import Path
 
 
 class CurveFitting:
-    """tool for curve fitting"""
+    """Tool for curve fitting"""
 
     def __init__(
         self,
@@ -21,15 +26,16 @@ class CurveFitting:
         file_name: str,
         path_plots: Path,
         path_fitting_data: Path,
-    ):
-        """Initialize parameters for the curve fitting class passing
-        experimental data
+    ) -> None:
+        """Initialize parameters for the curve fitting class by passing
+        experimental data whose curve is to be fitted, the file name,
+        and the paths to where plots fitting data are to be saved.
 
         Args:
-            experimental_data (pd.DataFrame): _description_
-            file_name (str): _description_
-            path_plots (Path): _description_
-            path_fitting_data (Path): _description_
+            experimental_data (pd.DataFrame): DataFrame of experimental data whose curve is to be fitted.
+            file_name (str): Desired name for the files that are being saved.
+            path_plots (Path): Path to where plots are to be saved.
+            path_fitting_data (Path): Path to where fitting data is to be saved.
         """
         self.exp_data = experimental_data
         self.x = self.exp_data.iloc[:, 0].values.tolist()
@@ -43,7 +49,7 @@ class CurveFitting:
         data_dict = {"data": {"x": self.x, "y": self.y}}
         return data_dict
 
-    def plot_raw_data(self):
+    def plot_raw_data(self) -> None:
         """Plot the data and save the plot"""
         exp_data_plot = sns.lineplot(
             x="scattering_vector", y="counts_per_area", data=self.exp_data
@@ -58,7 +64,7 @@ class CurveFitting:
 
     def find_peaks_cwt(
         self, peak_widths: tuple = (20,), cutoff_amplitude: float = None
-    ):
+    ) -> None:
         """Find peaks using the `find_peaks_cwt` method from signal.
         Prints number of found peaks. Figure with positions of found
         peaks is plotted and saved.
@@ -88,7 +94,7 @@ class CurveFitting:
             print("peak number:", j, "x:", key, "y:", value)
             j = j + 1
 
-    def plot_found_peak(self):
+    def plot_found_peak(self) -> None:
         """Plot peaks found and save the plot"""
         peak_fig, ax = plt.subplots()
         ax.plot(self.x, self.y)
@@ -103,8 +109,9 @@ class CurveFitting:
 
     def set_specifications_manually(
         self, number_of_models: int, model_specifications: dict
-    ):
-        """Manually sets the specifications for the individual model used for the fitting procedure. Stores the generated
+    ) -> None:
+        """Manually sets the specifications for the individual model
+        used for the fitting procedure. Stores the generated
         specifications in a json file.
 
         Args:
@@ -112,7 +119,6 @@ class CurveFitting:
             model_specifications (dict): Fitting parameters for the models, each consisting of the initial values 'type', 'center',
             'height' and 'sigma' of the individual models as well as corresponding 'help' parameter which confines the position of
             the model center during the fitting procedure.
-
         """
         self.n_models = number_of_models
         self.models = model_specifications
@@ -138,8 +144,9 @@ class CurveFitting:
 
     def set_specifications_automatically(
         self, tolerance: float, model_type: str
-    ):
-        """Automatically sets the specifications for the individual model used for the fitting procedure. Stores the generated
+    ) -> None:
+        """Automatically sets the specifications for the individual
+        model used for the fitting procedure. Stores the generated
         specifications in a json file.
 
         Args:
@@ -169,8 +176,9 @@ class CurveFitting:
         ) as outfile:
             outfile.write(json_models_dict)
 
-    def generate_model(self, speci: dict):
-        """Generates a composite model and corresponding parameters based on the provided specifications using the `model` class
+    def generate_model(self, speci: dict) -> tuple:
+        """Generates a composite model and corresponding parameters
+        based on the provided specifications using the `model` class
         of the python library `lmfit`.
 
         Args:
@@ -225,8 +233,9 @@ class CurveFitting:
                 composite_model = composite_model + model
         return composite_model, params
 
-    def fit(self):
-        """Executes the fitting algorithm starting from the generated model and the corresponding parameters. Saves the output as
+    def fit(self) -> None:
+        """Executes the fitting algorithm starting from the generated
+        model and the corresponding parameters. Saves the output as
         `model_result`, which is as a class of `lmfit`.
         """
         with open(
@@ -242,7 +251,7 @@ class CurveFitting:
             self.path_fitting_data / f"model_result_{self.file_name}.sav",
         )
 
-    def save_list_of_peak_centers(self):
+    def save_list_of_peak_centers(self) -> None:
         """Stores the determined peak centers in a text file."""
         model_result = load_modelresult(
             self.path_fitting_data / f"model_result_{self.file_name}.sav"
@@ -258,9 +267,12 @@ class CurveFitting:
             for line in list_peak_center:
                 f.write(f"{line}\n")
 
-    def plot_fitting_result(self):
-        """Loading the `model_result` and creating a plot using the `plot` method of the `model_result` class, which shows the fit along with the corresponding
-        residual values. Prints the positions of the individual fitted models along with their heights.
+    def plot_fitting_result(self) -> None:
+        """Loading the `model_result` and creating a plot using the
+        `plot` method of the `model_result` class, which shows the fit
+        along with the corresponding residual values. Prints the
+        positions of the individual fitted models along with their
+        heights.
         """
         model_result = load_modelresult(
             self.path_fitting_data / f"model_result_{self.file_name}.sav"
