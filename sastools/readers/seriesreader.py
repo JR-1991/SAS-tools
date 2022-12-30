@@ -53,8 +53,6 @@ class SeriesReader:
             )
         )
 
-        # Grab the values from
-
         return pd.DataFrame(
             {
                 series.id: pd.Series(self._get_series_data(series).data)
