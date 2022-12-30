@@ -5,6 +5,7 @@ seriesID attribute and create Pandas DataFrames from them.
 import pandas as pd
 
 from pyaniml import AnIMLDocument
+from typing import List
 
 
 class SeriesReader:
@@ -26,7 +27,7 @@ class SeriesReader:
     def __repr__(self):
         return "AnIML Series-element Reader"
 
-    def _parse_available_seriesIDs(self) -> list[str]:
+    def _parse_available_seriesIDs(self) -> List[str]:
         # Parse AnIMLDocument object and return the seriesID attribute
         # from every Series element within the document.
         available_seriesIDs = []
@@ -72,18 +73,14 @@ class SeriesReader:
         """
         dict_of_data = {}
         for sample_id in self._selected_seriesIDs:
-            experiment_steps = (
-                self._animl_doc.experiment_step_set.experiment_steps
-            )
+            experiment_steps = self._animl_doc.experiment_step_set.experiment_steps
             for experiment_step in experiment_steps:
                 results = experiment_step.result.results
                 for result in results:
                     # check Series in Result
                     try:
                         if sample_id in result.id:
-                            dict_of_data[
-                                result.id
-                            ] = result.individual_value_set.data
+                            dict_of_data[result.id] = result.individual_value_set.data
                     except:
                         pass
                     # check Series in Result.SeriesSet
@@ -123,17 +120,17 @@ class SeriesReader:
         )
 
     @property
-    def available_seriesIDs(self) -> list[str]:
+    def available_seriesIDs(self) -> List[str]:
         """Get SeriesID elements available in the AnIML document."""
         self._available_seriesIDs = self._parse_available_seriesIDs()
         return self._available_seriesIDs
 
     @property
-    def selected_seriesIDs(self) -> list[str]:
+    def selected_seriesIDs(self) -> List[str]:
         """Get list of seriesID selected so far."""
         return self._selected_seriesIDs
 
     @selected_seriesIDs.setter
-    def selected_seriesIDs(self, list_of_ids: list[str]) -> None:
+    def selected_seriesIDs(self, list_of_ids: List[str]) -> None:
         for series_id in list_of_ids:
             self._selected_seriesIDs.append(series_id)
