@@ -20,10 +20,7 @@ class HexagonalPhase(LLCPhase):
         return "Hexagonal LLC Phase"
 
     def _calculate_a_H1(self, d: float, h: int, k: int) -> float:
-        # Calculate and return the lattice parameter for a given lattice
-        # plane distance d, miller index h, and miller index k.
-        a_H1 = d * np.sqrt((4 / 3) * ((h**2 + k**2 + (h * k))))
-        return a_H1
+        return d * np.sqrt((4 / 3) * ((h**2 + k**2 + (h * k))))
 
     def calculate_lattice_parameters(
         self, d_meas: list[float], phase: LLCPhases = LLCPhases.H1
@@ -38,7 +35,7 @@ class HexagonalPhase(LLCPhase):
         Raises:
             NotImplementedError: If phase provided is not yet implemented.
         """
-        if not phase == LLCPhases.H1:
+        if phase != LLCPhases.H1:
             raise NotImplementedError(
                 f"Chosen LLC phase '{phase}' is not (yet) supported."
             )
@@ -97,13 +94,10 @@ class CubicPhase(LLCPhase):
         self._sqrt_miller = []
 
     def __repr__(self) -> str:
-        return f"Cubic LLC Phase"
+        return "Cubic LLC Phase"
 
     def _calculate_a_V1(self, d: float, h: int, k: int, l: int) -> float:
-        # Calculate and return the lattice parameter for a given lattice
-        # plane distance d, miller index h, k, and l.
-        a_V1 = d * (np.sqrt((h**2) + (k**2) + (l**2)))
-        return a_V1
+        return d * (np.sqrt((h**2) + (k**2) + (l**2)))
 
     def calculate_lattice_parameters(
         self,
@@ -122,7 +116,7 @@ class CubicPhase(LLCPhase):
         Raises:
             NotImplementedError: If phase provided is not yet implemented.
         """
-        if not phase == LLCPhases.V1:
+        if phase != LLCPhases.V1:
             raise NotImplementedError(
                 f"Chosen LLC phase '{phase}' is not (yet) supported."
             )
@@ -238,7 +232,7 @@ class LamellarPhase(LLCPhase):
         Raises:
             NotImplementedError: If phase provided is not yet implemented.
         """
-        if not phase == LLCPhases.LA:
+        if phase != LLCPhases.LA:
             raise NotImplementedError(
                 f"Chosen LLC phase '{phase}' is not (yet) supported."
             )
@@ -305,9 +299,7 @@ class IndeterminatePhase(LLCPhase):
         Raises:
             NotImplementedError: If this method is called.
         """
-        raise NotImplementedError(
-            f"No lattice parameter in indeterminate phases!"
-        )
+        raise NotImplementedError("No lattice parameter in indeterminate phases!")
 
     @property
     def exact_phase(self) -> LLCPhases:

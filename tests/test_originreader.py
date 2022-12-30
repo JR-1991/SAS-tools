@@ -32,8 +32,7 @@ def origin_reader():
     # Create a test file with Lorentzian data
     with open("test.txt", "w") as f:
         f.write(TEST_FILE)
-    reader = OriginReader("test.txt")
-    yield reader
+    yield OriginReader("test.txt")
     # Clean up the test file
     os.remove("test.txt")
 

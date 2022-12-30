@@ -45,9 +45,7 @@ class CurveFitting:
         self.path_fitting_data = path_fitting_data
 
     def _pack_data_into_dict(self) -> dict:
-        # Stores the data in a dictionary
-        data_dict = {"data": {"x": self.x, "y": self.y}}
-        return data_dict
+        return {"data": {"x": self.x, "y": self.y}}
 
     def plot_raw_data(self) -> None:
         """Plot the data and save the plot"""
@@ -227,10 +225,7 @@ class CurveFitting:
                 params = model_params
             else:
                 params.update(model_params)
-            if composite_model is None:
-                composite_model = model
-            else:
-                composite_model = composite_model + model
+            composite_model = model if composite_model is None else composite_model + model
         return composite_model, params
 
     def fit(self) -> None:
@@ -256,11 +251,10 @@ class CurveFitting:
         model_result = load_modelresult(
             self.path_fitting_data / f"model_result_{self.file_name}.sav"
         )
-        list_peak_center = []
-        for i in range(self.n_peaks):
-            list_peak_center.append(
-                model_result.best_values[f"model{i}_center"]
-            )
+        list_peak_center = [
+            model_result.best_values[f"model{i}_center"]
+            for i in range(self.n_peaks)
+        ]
         with open(
             self.path_fitting_data / f"list_xc_{self.file_name}.txt", "w"
         ) as f:

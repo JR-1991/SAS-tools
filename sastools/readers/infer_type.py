@@ -17,7 +17,7 @@ def infer_type(var_to_infer: Any) -> str:
     Returns:
         str: AnIML type as specified in AnIML core schema.
     """
-    if (var_to_infer == True) or (var_to_infer == False):
+    if var_to_infer in [True, False]:
         if isinstance(var_to_infer, bool):
             return "Boolean"
     elif isinstance(var_to_infer, str):
