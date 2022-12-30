@@ -7,7 +7,7 @@ import tempfile
 import pandas as pd
 
 from lxml import etree
-from typing import Union, List
+from typing import Union, List, Dict
 from pathlib import Path
 
 
@@ -32,12 +32,12 @@ class PDHReader:
         any_whitespace = re.compile(r"\s*<").match(line_in_file)
         return any_whitespace
 
-    def enumerate_available_files(self) -> dict[int, str]:
+    def enumerate_available_files(self) -> Dict[int, str]:
         """Enumerate the PDH files available in the given directory and
         return a dictionary with their index and name.
 
         Returns:
-            dict[int, str]: Indices and names of available files.
+            Dict[int, str]: Indices and names of available files.
         """
         return {count: value for count, value in enumerate(self.available_files)}
 
