@@ -32,7 +32,7 @@ dependencies = [
     "matplotlib",
     "numpy",
     "pandas",
-    "pyaniml==1.0.2",
+    "pyAnIML==1.0.2",
     "seaborn",
     "scipy",
     "pytest>=7.2.0"
