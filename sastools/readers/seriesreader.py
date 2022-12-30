@@ -24,6 +24,8 @@ class SeriesReader:
         self._animl_doc = animl_doc
         self._available_seriesIDs = self._parse_available_seriesIDs()
         self._selected_seriesIDs = []
+        
+        print(self._available_seriesIDs)
 
     def __repr__(self):
         return "AnIML Series-element Reader"
@@ -31,7 +33,8 @@ class SeriesReader:
     def _parse_available_seriesIDs(self) -> List[str]:
         """Parse AnIMLDocument object and return the seriesID attribute from every Series element within the document."""
         return [
-            series.id for series in self.traverse_model_by_type(self._animl_doc, Series)
+            series.id.rstrip("__")
+            for series in self.traverse_model_by_type(self._animl_doc, Series)
         ]
 
     def create_dataframe(self) -> pd.DataFrame:
@@ -45,7 +48,7 @@ class SeriesReader:
         # Get all series that comply to the IDs
         selected_series = list(
             filter(
-                lambda series: series.id in self.selected_seriesIDs,
+                lambda series: series.id.rstrip("__") in self.selected_seriesIDs,
                 self.traverse_model_by_type(self._animl_doc, Series),
             )
         )

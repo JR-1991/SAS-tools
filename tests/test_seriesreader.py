@@ -6,7 +6,7 @@ from pyaniml import AnIMLDocument
 
 from sastools.readers import SeriesReader
 
-TEST_ID = ["x0__", "y0__"]
+TEST_ID = ["x0", "y0"]
 
 
 @pytest.fixture
