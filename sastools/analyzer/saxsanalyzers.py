@@ -44,9 +44,7 @@ class PrepareStandard:
             self.calculate_scattering_vector()
         elif self._standard is None and self._q_std_lit:
             pass
-        elif self._standard is None and self._q_std_lit is None:
-            pass
-        else:
+        elif self._standard is not None or self._q_std_lit is not None:
             raise NotImplementedError(
                 f"SAXS Standard {standard.name} is not yet implemented."
             )
@@ -77,15 +75,14 @@ class PrepareStandard:
             d_std_lit = [5.249824535, 2.624912267, 1.749941512]
             # Reference: D. L. Dorset, Journal of Lipid Research 1987,
             # 28, 993-1005.
-        else:
-            if d_std_lit is None:
-                raise ValueError(
-                    "d_std_lit has to be given, as neither a SAXS standard nor q_std_lit have been initialized!"
-                )
-            elif len(d_std_lit) < 1:
-                raise ValueError(
-                    f"d_std_lit = {d_std_lit} cannot be an empty list!"
-                )
+        elif d_std_lit is None:
+            raise ValueError(
+                "d_std_lit has to be given, as neither a SAXS standard nor q_std_lit have been initialized!"
+            )
+        elif not d_std_lit:
+            raise ValueError(
+                f"d_std_lit = {d_std_lit} cannot be an empty list!"
+            )
 
         self._q_std_lit = [(2 * np.pi) / d for d in d_std_lit]
         return self._q_std_lit

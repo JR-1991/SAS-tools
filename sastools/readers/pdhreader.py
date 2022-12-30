@@ -29,9 +29,7 @@ class PDHReader:
         return "PDH Reader"
 
     def _line_is_xml(self, line_in_file):
-        # Match n whitespaces, followed by an XML opening tag `<`.
-        any_whitespace = re.compile("\s*<").match(line_in_file)
-        return any_whitespace
+        return re.compile("\s*<").match(line_in_file)
 
     def enumerate_available_files(self) -> dict[int, str]:
         """Enumerate the PDH files available in the given directory and
@@ -40,9 +38,7 @@ class PDHReader:
         Returns:
             dict[int, str]: Indices and names of available files.
         """
-        return {
-            count: value for count, value in enumerate(self.available_files)
-        }
+        return dict(enumerate(self.available_files))
 
     def extract_data(self, filestem: str) -> pd.DataFrame:
         """Extract only data block as a `pandas.DataFrame`.
@@ -53,7 +49,7 @@ class PDHReader:
         Returns:
             pandas.DataFrame: DataFrame containing only the data from the file.
         """
-        dataframe = pd.read_table(
+        return pd.read_table(
             self._available_files[filestem],
             delimiter="   ",
             usecols=[0, 1],
@@ -62,7 +58,6 @@ class PDHReader:
             skipfooter=496,
             engine="python",
         )
-        return dataframe
 
     def extract_metadata(self, filestem: str) -> etree.ElementTree:
         """Extract XML metadata footer as an `etree.ElementTree`.

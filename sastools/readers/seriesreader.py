@@ -41,8 +41,7 @@ class SeriesReader:
                     pass
                 # check Series in Result.SeriesSet
                 try:
-                    for series in result.series:
-                        available_seriesIDs.append(series.id[:-2])
+                    available_seriesIDs.extend(series.id[:-2] for series in result.series)
                 except:
                     pass
                 # check Categories
@@ -55,8 +54,7 @@ class SeriesReader:
                             pass
                         # check for Series in Result.Category.SeriesSet
                         try:
-                            for series in category.series:
-                                available_seriesIDs.append(series.id[:-2])
+                            available_seriesIDs.extend(series.id[:-2] for series in category.series)
                         except:
                             pass
                 except:
@@ -71,10 +69,10 @@ class SeriesReader:
             pandas.DataFrame: DataFrame containing all Series elements selected by their seriesID attribute.
         """
         dict_of_data = {}
+        experiment_steps = (
+            self._animl_doc.experiment_step_set.experiment_steps
+        )
         for sample_id in self._selected_seriesIDs:
-            experiment_steps = (
-                self._animl_doc.experiment_step_set.experiment_steps
-            )
             for experiment_step in experiment_steps:
                 results = experiment_step.result.results
                 for result in results:
